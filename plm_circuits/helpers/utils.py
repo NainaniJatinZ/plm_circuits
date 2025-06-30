@@ -4,6 +4,7 @@ import re
 import torch
 import random
 import numpy as np
+from IPython import get_ipython
 from huggingface_hub import hf_hub_download
 from .sae_model_interprot import SparseAutoencoder
 from safetensors.torch import load_file
@@ -283,21 +284,10 @@ def norm_sum_mult(ori_contact_seg, seg_cross_contact):
     return torch.sum(ori_mult_new) / torch.sum(ori_mult_ori)
 
 def patching_metric(contact_preds, orig_contact, ss1_start, ss1_end, ss2_start, ss2_end):
-    """
-    Compute the patching metric based on the contact predictions and original contact map.
-    Args:
-        contact_preds (torch.Tensor): Contact predictions from the model (requires gradients).
-        orig_contact (torch.Tensor): Original contact map (requires gradients).
-        ss1_start (int): Start index of the first segment.
-        ss1_end (int): End index of the first segment.
-        ss2_start (int): Start index of the second segment.
-        ss2_end (int): End index of the second segment.
-    Returns:
-        torch.Tensor: Patching metric value.
-    """
+
     seg_cross_contact = contact_preds[ss1_start:ss1_end, ss2_start:ss2_end]
     orig_contact_seg = orig_contact[ss1_start:ss1_end, ss2_start:ss2_end]
-    return norm_sum_mult(orig_contact_seg, seg_cross_contact)
+    return torch.sum(seg_cross_contact * orig_contact_seg) / torch.sum(orig_contact_seg * orig_contact_seg)
 
 def seq_to_tokens(seq: str, batch_converter, alphabet, device: torch.device):
     """Convenience wrapper: str‑>tokens_BL & mask_BL."""

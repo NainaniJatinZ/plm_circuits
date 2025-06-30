@@ -269,7 +269,7 @@ def integrated_gradients_sae(
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-esm_transformer, batch_converter, esm2_alphabet = load_esm(33, device=device)
+esm_transformer, batch_converter, esm2_alphabet = load_esm(33, device=device) # 3b, 650m
 
 main_layers = [4, 8, 12, 16, 20, 24, 28]
 saes = []
@@ -401,7 +401,7 @@ for layer_idx in main_layers:
         corr_seq_sae_contact_LL = esm_transformer.predict_contacts(corr_batch_tokens_BL, corr_batch_mask_BL)[0]
     cleanup_cuda()
     handle.remove()
-    corr_cache_LS = sae_model.feature_acts
+    corr_cache_LS = sae_model.feature_acts # corr_cache_LS[:, a]
     corr_err_cache_BLF = sae_model.error_term
     corr_contact_recovery = _patching_metric(corr_seq_sae_contact_LL)
     print(f"Layer {layer_idx}: Clean contact recovery: {clean_contact_recovery:.4f}, Corr contact recovery: {corr_contact_recovery:.4f}")
@@ -633,7 +633,7 @@ def topk_performance(esm_transformer,
     return rec, topk_circuit
 
 
-rec, topk_circuit = topk_performance(esm_transformer, saes, all_effects_sae_ALS, all_effects_err_ABLF, k=1000, mode="abs", corr_layer_caches=corr_layer_caches, corr_layer_errors=corr_layer_errors, clean_layer_errors=clean_layer_errors)
+rec, topk_circuit = topk_performance(esm_transformer, saes, all_effects_sae_ALS, all_effects_err_ABLF, k=2000, mode="neg", corr_layer_caches=corr_layer_caches, corr_layer_errors=corr_layer_errors, clean_layer_errors=clean_layer_errors)
 
 print(rec)
 
@@ -812,3 +812,167 @@ print(f"Unique sequence positions involved: {len(unique_tokens)}")
 print(len([1 for x in topk_circuit if x["type"] == "SAE"]))
 print(len([1 for x in topk_circuit if x["type"] == "ERR"]))
 
+
+# %%
+
+def topk_ablation(esm_transformer, 
+                     saes, 
+                     all_effects_sae_ALS, 
+                     all_effects_err_ABLF, 
+                     k, 
+                     mode, 
+                     corr_layer_caches, 
+                     corr_layer_errors, 
+                     clean_layer_errors, 
+                     layer_2_saelayer = layer_2_saelayer, 
+                     saelayer_2_layer = saelayer_2_layer,
+                     device = device, 
+                     clean_batch_tokens_BL = clean_batch_tokens_BL, 
+                     clean_batch_mask_BL = clean_batch_mask_BL, 
+                     _patching_metric = _patching_metric, 
+                     main_layers = main_layers, 
+                     fixed_error = False):
+    topk_circuit = topk_sae_err_pt(all_effects_sae_ALS, all_effects_err_ABLF, k=k, mode=mode)
+    
+    layer_masks = {}
+    for layer_idx in list(layer_2_saelayer.values()): #main_layers:
+        # shapes: (L,S)  and  (1,L,F)
+        L, S   = saes[layer_idx].feature_acts.shape
+        F      = corr_layer_errors[saelayer_2_layer[layer_idx]].shape[-1]
+        sae_m  = torch.zeros((L, S), dtype=torch.bool, device=device)  # FALSE → keep clean
+        err_m  = torch.zeros((1, L, F), dtype=torch.bool, device=device)
+        layer_masks[layer_idx] = {"sae": sae_m, "err": err_m}
+
+    for entry in topk_circuit:                     # flip the selected positions to TRUE  (= patch)
+        l = entry["layer_idx"]
+        t = entry["token_idx"]
+        if entry["type"] == "SAE":
+            u = entry["latent_idx"]
+            layer_masks[l]["sae"][t, u] = True
+        else:                              # "ERR"
+            layer_masks[l]["err"][0, t, :] = True
+
+    handles = []
+
+    for layer_idx in main_layers:
+        sae_model = saes[layer_2_saelayer[layer_idx]]
+        base_layer_idx = layer_2_saelayer[layer_idx]
+        # --- fetch caches produced earlier for *this* layer ---------------
+        corr_lat_LS  = corr_layer_caches[layer_idx]
+        clean_err_LF = clean_layer_errors[layer_idx]
+        corr_err_LF  = corr_layer_errors[layer_idx]
+
+        m_sae = layer_masks[base_layer_idx]["sae"]             # (1,L,S)  bool
+        m_err = layer_masks[base_layer_idx]["err"]             # (1,L,F)  bool
+
+        # choose which values will overwrite the clean forward
+        lat_patch_val = corr_lat_LS
+        #err_patch_val = corr_err_LF
+        if fixed_error:
+            # mean-error logic (broadcast from (1,L,F) to (B,L,F))
+            sae_model.mean_error = clean_err_LF # m_err * err_patch_val + (~m_err) * clean_err_LF
+        else:
+            sae_model.mean_error = m_err * corr_err_LF + (~m_err) * clean_err_LF
+
+        h = SAEHookProt(
+            sae          = sae_model,
+            mask_BL      = clean_batch_mask_BL,            # B,L
+            patch_mask_BLS = m_sae.to(device),                       # apply ONLY where m_sae==True
+            patch_value    = lat_patch_val.to(device),               # L,S   (broadcast to B,L,S)
+            use_mean_error = True,
+        )
+        hd = esm_transformer.esm.encoder.layer[layer_idx].register_forward_hook(h)
+        handles.append(hd)
+
+    # ---- forward & metric ----------------------------------------------------
+    with torch.no_grad():
+        preds_LL = esm_transformer.predict_contacts(clean_batch_tokens_BL, clean_batch_mask_BL)[0]
+    rec = _patching_metric(preds_LL)
+
+    # ---- clean up ------------------------------------------------------------
+    for hd in handles:
+        hd.remove()
+    cleanup_cuda()
+    return rec, topk_circuit
+
+def plot_ablation_sweep(
+    modes: list[str],
+    start_k: int,
+    end_k: int,
+    step_k: int,
+    mode2label: dict[str, str],
+    *,
+    fixed_error: bool = False,
+    corr_layer_caches=corr_layer_caches,
+    corr_layer_errors=corr_layer_errors,
+    clean_layer_errors=clean_layer_errors,
+    esm_transformer=esm_transformer,
+    saes=saes,
+    all_effects_sae_ALS=all_effects_sae_ALS,
+    all_effects_err_ABLF=all_effects_err_ABLF,
+    clean_contact_recovery: float = clean_contact_recovery.item(),
+    **topk_ablation_kwargs,
+):
+    """Run *topk_ablation* for a grid of *k* and plot one curve per *mode*.
+
+    Parameters
+    ----------
+    modes
+        List of strings ("abs", "pos", "neg") to evaluate.
+    start_k, end_k, step_k
+        Range passed to *range()*; *end_k* is inclusive.
+    fixed_error, ...
+        Forwarded to *topk_ablation*.
+    clean_contact_recovery
+        Reference value for horizontal lines.
+    topk_ablation_kwargs
+        Any extra arguments forwarded to *topk_ablation* (e.g. batch tensors).
+    """
+
+    ks = list(range(start_k, end_k + 1, step_k))
+
+    plt.figure(figsize=(7, 4))
+
+    for mode in modes:
+        recs = []
+        for k in ks:
+            rec, _ = topk_ablation(
+                esm_transformer,
+                saes,
+                all_effects_sae_ALS,
+                all_effects_err_ABLF,
+                k=k,
+                mode=mode,
+                corr_layer_caches=corr_layer_caches,
+                corr_layer_errors=corr_layer_errors,
+                clean_layer_errors=clean_layer_errors,
+                fixed_error=fixed_error,
+                **topk_ablation_kwargs,
+            )
+            recs.append(rec.item())
+        print(f"{mode} ablation scores:", recs)
+        plt.plot(ks, recs, marker="o", label=mode2label[mode])
+
+    # reference lines ----------------------------------------------------
+    plt.axhline(clean_contact_recovery, linestyle="--", color="black", label="clean")
+    plt.axhline(clean_contact_recovery * 0.6, linestyle=":", color="black", label="0.6× clean")
+
+    plt.xlabel("k (top-k elements ablated)")
+    plt.ylabel("contact-recovery")
+    plt.title("Recovery vs K component ablation for different topK strategies")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+# Example usage of ablation sweep
+mode2label = {"abs": "Absolute", "pos": "Positive", "neg": "Negative"}
+plot_ablation_sweep(["abs", "pos", "neg"], 0, 1000, 100, fixed_error=True, mode2label=mode2label)
+
+rec, topk_circuit = topk_ablation(esm_transformer, saes, all_effects_sae_ALS, all_effects_err_ABLF, k=200, mode="neg", corr_layer_caches=corr_layer_caches, corr_layer_errors=corr_layer_errors, clean_layer_errors=clean_layer_errors, fixed_error=True)
+
+print(rec)
+
+# %%
+
+200/8
+# %%
