@@ -65,6 +65,7 @@ class SAEHookProt:
         calc_error: bool = False,
         use_error: bool = False,
         use_mean_error: bool = False,
+        no_detach: bool = False
     ) -> None:
         self.sae = sae.eval()
         self.mask_BL = mask_BL
@@ -76,7 +77,7 @@ class SAEHookProt:
         self.calc_error = calc_error
         self.use_error = use_error
         self.use_mean_error = use_mean_error
-
+        self.no_detach = no_detach
     # ------------------------------------------------------------------ #
     def __call__(
         self,
@@ -101,7 +102,10 @@ class SAEHookProt:
                 f_BXS[self.patch_mask_BLS] = self.patch_value[self.patch_mask_BLS]
 
         if self.cache_latents:
-            self.sae.feature_acts = f_BXS.detach().cpu()
+            if self.no_detach:
+                self.sae.feature_acts = f_BXS.clone()
+            else:
+                self.sae.feature_acts = f_BXS.detach().clone().cpu()
 
         topk_BXS = self.sae.topK_activation(f_BXS, self.sae.k)
         recon_BXF = (topk_BXS @ self.sae.w_dec + self.sae.b_pre) * std_F + mu_F
