@@ -62,6 +62,7 @@ class SAEHookProt:
         patch_mask_BLS: Optional[torch.Tensor] = None,
         layer_is_lm: bool = False,
         cache_latents: bool = False,
+        cache_masked_latents: bool = False,
         calc_error: bool = False,
         use_error: bool = False,
         use_mean_error: bool = False,
@@ -74,6 +75,7 @@ class SAEHookProt:
         self.patch_mask_BLS = patch_mask_BLS
         self.layer_is_lm = layer_is_lm
         self.cache_latents = cache_latents
+        self.cache_masked_latents = cache_masked_latents
         self.calc_error = calc_error
         self.use_error = use_error
         self.use_mean_error = use_mean_error
@@ -108,6 +110,10 @@ class SAEHookProt:
                 self.sae.feature_acts = f_BXS.detach().clone().cpu()
 
         topk_BXS = self.sae.topK_activation(f_BXS, self.sae.k)
+
+        if self.cache_masked_latents:
+            self.sae.masked_latents = topk_BXS.clone()
+
         recon_BXF = (topk_BXS @ self.sae.w_dec + self.sae.b_pre) * std_F + mu_F
 
         mod_BLF[self.mask_BL] = recon_BXF
