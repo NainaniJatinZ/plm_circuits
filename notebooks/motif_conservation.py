@@ -67,6 +67,365 @@ print(f"Loaded {len(protein_sequences)} protein sequences")
 # Define a named tuple to store activation information
 ActivationInfo = namedtuple('ActivationInfo', ['activation_value', 'protein_idx', 'token_idx', 'protein_id', 'residue_idx'])
 
+
+def find_top_k_activations_streamlined(cache_system, layer_idx, latent_idx, k=100):
+    """
+    Streamlined approach: single pass, one max per protein, top K globally.
+    """
+    print(f"Finding top {k} activations for layer {layer_idx}, latent {latent_idx}...")
+    print("Using streamlined single-pass approach (one max per protein)")
+    
+    # Use a min-heap to efficiently maintain top-K
+    top_k_heap = []
+    
+    for protein_idx in tqdm(range(len(cache_system.metadata['proteins'])), desc="Processing proteins"):
+        try:
+            protein_data = cache_system.metadata['proteins'][protein_idx]
+            protein_id = protein_data['protein_id']
+            sequence_length = protein_data['sequence_length']
+            
+            # Load the specific layer file
+            layer_file = protein_data[f'layer_{layer_idx}_file']
+            
+            if cache_system.use_sparse:
+                sparse_matrix = load_npz(layer_file)
+                latent_column = sparse_matrix[:, latent_idx].toarray().flatten()
+            else:
+                acts_np = np.load(layer_file)
+                latent_column = acts_np[:, latent_idx]
+            
+            # # Find max activation and its position
+            # if len(latent_column) > 0:
+            #     valid_length = min(len(latent_column), sequence_length)
+            #     valid_activations = latent_column[:valid_length]
+                
+            #     if len(valid_activations) > 0:
+            max_idx = np.argmax(latent_column)
+            max_activation = float(latent_column[max_idx])
+            
+            activation_info = ActivationInfo(
+                activation_value=max_activation,
+                protein_idx=protein_idx,
+                token_idx=max_idx + 1,  # +1 for BOS token offset
+                protein_id=protein_id,
+                residue_idx=max_idx  # Direct residue position
+            )
+            
+            # Maintain top-K using heap
+            if len(top_k_heap) < k:
+                heapq.heappush(top_k_heap, (-max_activation, protein_idx, activation_info))
+            elif max_activation > -top_k_heap[0][0]:
+                heapq.heapreplace(top_k_heap, (-max_activation, protein_idx, activation_info))
+                
+        except Exception as e:
+            print(f"Error processing protein {protein_idx}: {e}")
+            continue
+    
+    # Extract results and sort by activation value (highest first)
+    top_k_activations = [item[2] for item in top_k_heap]
+    top_k_activations.sort(key=lambda x: x.activation_value, reverse=True)
+    
+    print(f"\nResults:")
+    print(f"- Processed {len(cache_system.metadata['proteins'])} proteins")
+    print(f"- Found {len(top_k_activations)} top activations")
+    if top_k_activations:
+        print(f"- Activation range: {top_k_activations[0].activation_value:.4f} to {top_k_activations[-1].activation_value:.4f}")
+    
+    return top_k_activations
+
+# %% 1. Finding top (protein, residue) pairs
+layer_idx = 12
+latent_idx = 2112
+top_k = 100
+window_size = 10
+
+# Find top K activations across all proteins (using streamlined approach)
+top_activations = find_top_k_activations_streamlined(
+    tmp, layer_idx, latent_idx, k=top_k
+)
+# %%
+import pickle
+with open(f'top_activations_layer{layer_idx}_latent{latent_idx}_top{top_k}_streamlined.pkl', 'wb') as f:
+    pickle.dump(top_activations, f)
+
+# %%
+
+def extract_neighborhoods(top_activations, protein_sequences, window_size=10, pad_token='X'):
+    """
+    Extract amino acid neighborhoods around top activating positions.
+    Handles proper token-to-residue mapping and pads incomplete neighborhoods.
+    
+    Args:
+        top_activations: List of ActivationInfo tuples
+        protein_sequences: Dict mapping protein_id to sequence string
+        window_size: Number of residues on each side of the central residue
+        pad_token: Token to use for padding when neighborhood extends beyond sequence
+    
+    Returns:
+        List of dicts containing neighborhood information
+    """
+    neighborhoods = []
+    
+    for i, act_info in enumerate(tqdm(top_activations, desc="Extracting neighborhoods")):
+        protein_id = act_info.protein_id
+        residue_idx = act_info.residue_idx  # Use residue index, not token index
+        
+        if protein_id not in protein_sequences:
+            print(f"Warning: Protein {protein_id} not found in sequence database")
+            continue
+        
+        sequence = protein_sequences[protein_id]
+        
+        # Validate that residue_idx is within the sequence
+        if residue_idx >= len(sequence) or residue_idx < 0:
+            print(f"Warning: Residue index {residue_idx} out of bounds for protein {protein_id} (length {len(sequence)})")
+            continue
+        
+        # Calculate desired neighborhood boundaries
+        desired_start = residue_idx - window_size
+        desired_end = residue_idx + window_size + 1
+        
+        # Calculate actual sequence boundaries
+        seq_start = max(0, desired_start)
+        seq_end = min(len(sequence), desired_end)
+        
+        # Extract the actual sequence part
+        actual_seq = sequence[seq_start:seq_end]
+        
+        # Calculate padding needed
+        left_padding = seq_start - desired_start  # How many positions we're missing on the left
+        right_padding = desired_end - seq_end     # How many positions we're missing on the right
+        
+        # Create the full neighborhood with padding
+        neighborhood_seq = (pad_token * left_padding) + actual_seq + (pad_token * right_padding)
+        
+        # The central residue is always at position window_size in the padded sequence
+        central_pos_in_neighborhood = window_size
+        
+        neighborhood_info = {
+            'rank': i + 1,
+            'activation_value': act_info.activation_value,
+            'protein_idx': act_info.protein_idx,
+            'protein_id': protein_id,
+            'token_idx': act_info.token_idx,  # Keep original token index for reference
+            'residue_idx': residue_idx,       # Actual amino acid position in sequence
+            'central_residue': sequence[residue_idx],
+            'neighborhood_seq': neighborhood_seq,
+            'neighborhood_length': len(neighborhood_seq),
+            'central_pos_in_neighborhood': central_pos_in_neighborhood,
+            'full_seq_length': len(sequence),
+            'left_padding': left_padding,
+            'right_padding': right_padding,
+            'actual_start_in_sequence': seq_start,
+            'actual_end_in_sequence': seq_end
+        }
+        
+        neighborhoods.append(neighborhood_info)
+    
+    return neighborhoods
+
+# %% 2. Extracting neighborhoods around top activating positions
+ 
+# Extract neighborhoods around top activating positions
+neighborhoods = extract_neighborhoods(top_activations, protein_sequences, window_size=window_size)
+
+print(f"\nExtracted {len(neighborhoods)} neighborhoods")
+
+# Display first few neighborhoods
+print("\nTop 10 neighborhoods:")
+for i, neighborhood in enumerate(neighborhoods[:10]):
+    central_res = neighborhood['central_residue']
+    seq = neighborhood['neighborhood_seq']
+    central_pos = neighborhood['central_pos_in_neighborhood']
+    act_val = neighborhood['activation_value']
+    residue_pos = neighborhood['residue_idx']
+    token_pos = neighborhood['token_idx']
+    
+    # Create a visual representation with the central residue highlighted
+    seq_display = seq[:central_pos] + f"[{central_res}]" + seq[central_pos+1:]
+    
+    # Show both residue position (in sequence) and token position (in model)
+    print(f"{i+1:2d}. Act={act_val:.4f}, {neighborhood['protein_id']}, residue_pos={residue_pos} (token={token_pos}): {seq_display}")
+    
+    # Show padding info if any
+    if neighborhood['left_padding'] > 0 or neighborhood['right_padding'] > 0:
+        print(f"    Padding: {neighborhood['left_padding']} left, {neighborhood['right_padding']} right")
+
+# %%
+
+def analyze_conservation(aligned_sequences, positions_to_analyze=None):
+    """
+    Perform basic conservation analysis on aligned sequences.
+    
+    Args:
+        aligned_sequences: List of aligned amino acid sequences
+        positions_to_analyze: List of positions to analyze (None for all)
+    
+    Returns:
+        position_frequencies: Dict of position -> amino acid -> count
+    """
+    if not aligned_sequences:
+        return {}
+    
+    seq_length = len(aligned_sequences[0])
+    position_frequencies = {}
+    
+    # Analyze all positions if none specified
+    if positions_to_analyze is None:
+        positions_to_analyze = list(range(seq_length))
+    
+    for pos in positions_to_analyze:
+        position_frequencies[pos] = {}
+        
+        for seq in aligned_sequences:
+            if pos < len(seq):
+                aa = seq[pos]
+                position_frequencies[pos][aa] = position_frequencies[pos].get(aa, 0) + 1
+    
+    return position_frequencies
+
+# Prepare data for conservation analysis
+def prepare_conservation_data(neighborhoods):
+    """
+    Prepare the neighborhood data for conservation analysis and sequence logo generation.
+    
+    Returns:
+        aligned_sequences: List of sequences all aligned by their central residue
+        central_residues: List of central amino acids
+        activation_values: List of corresponding activation values
+    """
+    aligned_sequences = []
+    central_residues = []
+    activation_values = []
+    
+    for neighborhood in neighborhoods:
+        aligned_sequences.append(neighborhood['neighborhood_seq'])
+        central_residues.append(neighborhood['central_residue'])
+        activation_values.append(neighborhood['activation_value'])
+    
+    return aligned_sequences, central_residues, activation_values
+
+def generate_sequence_logo_working(count_matrix, layer_idx, latent_idx, window_size, aligned_sequences):
+    """
+    The actual working version - simple and reliable.
+    """
+    import logomaker
+    import matplotlib.pyplot as plt
+    
+    # Sanity check
+    if count_matrix is None or count_matrix.empty:
+        raise ValueError("count_matrix is empty – build it first!")
+    
+    # transpose so rows = positions, columns = amino acids
+    logo_df = count_matrix.T            # shape: (positions, 20 AA's)
+    logo_df.index.name = 'pos'          # nice index name
+    
+    # make sure only standard AA columns remain & in canonical order
+    aa_cols = list('ACDEFGHIKLMNPQRSTVWY')
+    logo_df = logo_df.reindex(columns=aa_cols, fill_value=0)
+    
+    seq_len = len(logo_df)
+    
+    # Plot
+    plt.rcParams['figure.dpi']  = 300
+    plt.rcParams['font.size']   = 12
+    
+    fig, ax = plt.subplots(figsize=(max(8, seq_len * 0.5), 6))
+    
+    logomaker.Logo(
+        logo_df,
+        ax=ax,
+        fade_below=0.5,
+        stack_order='big_on_top',
+        color_scheme='NajafabadiEtAl2017'
+    )
+    
+    # x-axis labels = relative positions
+    rel_labels = [f'{i - window_size:+d}' if i != window_size else '0'
+                  for i in range(seq_len)]
+    
+    ax.set_xticks(range(seq_len))
+    ax.set_xticklabels(rel_labels)
+    ax.set_xlabel('Position relative to center')
+    ax.set_ylabel('Information Content (bits)')
+    ax.set_title(
+        f'Sequence Logo – Layer {layer_idx}, Latent {latent_idx}\n'
+        f'Top {len(aligned_sequences)} Activating Neighborhoods (±{window_size} residues)',
+        pad=20, weight='bold'
+    )
+    
+    # highlight centre residue
+    ax.axvline(window_size, color='red', ls='--', lw=2, alpha=.7)
+    ax.text(window_size, ax.get_ylim()[1]*0.95, 'Activating\nResidue',
+            ha='center', va='top', color='red', weight='bold', fontsize=10)
+    
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(True, axis='y', alpha=.3)
+    fig.tight_layout()
+    
+    # Save & show
+    png_name = f'sequence_logo_layer{layer_idx}_latent{latent_idx}_top{len(aligned_sequences)}.png'
+    pdf_name = f'sequence_logo_layer{layer_idx}_latent{latent_idx}_top{len(aligned_sequences)}.pdf'
+    fig.savefig(png_name, dpi=300, bbox_inches='tight', facecolor='white')
+    fig.savefig(pdf_name, format='pdf', bbox_inches='tight', facecolor='white')
+    print(f"Saved logo as {png_name} and {pdf_name}")
+    plt.show()
+    
+    return fig
+
+def prepare_logomaker_data(conservation_data, aligned_sequences):
+    """
+    Convert conservation data to format needed for logomaker.
+    
+    Args:
+        conservation_data: Dict from analyze_conservation
+        aligned_sequences: List of aligned sequences
+        
+    Returns:
+        pandas DataFrame with amino acids as rows and positions as columns
+    """
+    import pandas as pd
+    import numpy as np
+    
+    if not aligned_sequences or not conservation_data:
+        return None
+    
+    seq_length = len(aligned_sequences[0])
+    
+    # All 20 standard amino acids (excluding X for now)
+    amino_acids = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
+                   'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+    
+    # Use simple integer positions for logomaker (it doesn't like multi-character column names)
+    positions = list(range(seq_length))
+    
+    # Initialize count matrix with integer positions
+    count_matrix = pd.DataFrame(0, index=amino_acids, columns=positions)
+    
+    # Fill in the counts
+    for pos in range(seq_length):
+        if pos in conservation_data:
+            for aa, count in conservation_data[pos].items():
+                if aa in amino_acids:  # Skip X (padding) for cleaner logo
+                    count_matrix.loc[aa, pos] = count
+    
+    return count_matrix
+
+
+# %%
+
+aligned_sequences = [n['neighborhood_seq'] for n in neighborhoods]
+conservation_data = analyze_conservation(aligned_sequences)
+count_matrix = prepare_logomaker_data(conservation_data, aligned_sequences)
+
+# Step 4: Generate logo (working version)
+if count_matrix is not None:
+    fig = generate_sequence_logo_fixed(count_matrix, layer_idx, latent_idx, window_size, aligned_sequences)
+    
+
+# %% OLD CODE 
+
 def find_top_k_activations_super_efficient(cache_system, layer_idx, latent_idx, k=100, 
                                            min_activation_threshold=0.1, max_proteins_to_analyze=500):
     """
