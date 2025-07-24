@@ -56,160 +56,7 @@ FeatureIndex = int
 ConnectionTuple = Tuple[FeatureIndex, FeatureIndex, float]
 EdgeResults = Dict[str, Any]
 
-def _compute_jvp_edge_v2(
-    model: Any,
-    base_saes: List[Any],
-    upstream_sae: Any,
-    downstream_sae: Any,
-    token_list: torch.Tensor,
-    upstream_features: List[FeatureIndex],
-    downstream_features: List[FeatureIndex],
-    clean_sae_cache: TensorDict,
-    clean_error_cache: TensorDict,
-    res_sae_effects: TensorDict,
-    labels: torch.Tensor,
-    device: torch.device,
-    *,
-    use_mean_error: bool = True,
-    edge_includes_loss_grad: bool = True,
-    logstats: bool = False,
-) -> Optional[torch.Tensor]:
-    """
-    Reverse-mode **VJP** implementation of layer-to-layer edge attribution.
-
-    For every pair (down_idx, up_idx) we accumulate
-
-        Σ_{b,t}  ∂ y[b,t,down_idx] / ∂ x[b,t,up_idx]
-        (or the gradient-weighted version if `edge_includes_loss_grad=True`).
-
-    Compared with the old forward-mode JVP version this is:
-
-      • robust (all ops in PyTorch have a VJP rule)  
-      • slightly heavier on memory, but still much faster than
-        finite-difference or zero-ablation baselines.
-    """
-    if logstats:
-        print(f"[edge-attr-vjp] running reverse-mode edge attribution")
-
-    up_hook, down_hook = upstream_sae.cfg.hook_name, downstream_sae.cfg.hook_name
-    up_feats, down_feats = upstream_features, downstream_features
-    if not up_feats or not down_feats:
-        if logstats:
-            print(f"[edge-attr-vjp] skip {up_hook}->{down_hook} (no feats)")
-        return None
-
-    # 1. Baseline upstream activation that we will differentiate *through*
-    up_base = (
-        clean_sae_cache[up_hook]
-        .detach()
-        .clone()
-        .to(device)
-        .requires_grad_()
-    )
-
-    # 2. Helper: forward pass that returns downstream SAE latents *attached*
-    def _forward_fn() -> torch.Tensor:
-        # up hook that puts patch activations 
-        upstream_sae.mean_error = clean_error_cache[up_hook]
-        up_hook_obj = SAEHookProt(
-            sae=upstream_sae, 
-            mask_BL=token_list, 
-            patch_mask_BLS=torch.ones_like(clean_sae_cache[up_hook][:, :, 0], dtype=torch.bool), 
-            patch_value=up_base, 
-            use_mean_error=True
-        )
-
-        # down hook that records downstream activations
-        downstream_sae.mean_error = clean_error_cache[down_hook]
-        down_hook_obj = SAEHookProt(
-            sae=downstream_sae, 
-            mask_BL=token_list, 
-            cache_latents=True, 
-            layer_is_lm=False, 
-            calc_error=True, 
-            use_error=True, 
-            no_detach=True
-        )
-
-        # register the hooks
-        up_layer_idx = int(up_hook.split('.')[-1])
-        down_layer_idx = int(down_hook.split('.')[-1])
-        
-        handle_up = model.esm.encoder.layer[up_layer_idx].register_forward_hook(up_hook_obj)
-        handle_down = model.esm.encoder.layer[down_layer_idx].register_forward_hook(down_hook_obj)
-
-        # run the forward pass
-        _ = model.predict_contacts(token_list, (token_list != model.alphabet.padding_idx).to(device))[0]
-        
-        handle_up.remove()
-        handle_down.remove()
-        
-        feats = downstream_sae.feature_acts
-        if not feats.requires_grad:
-            raise RuntimeError(
-                "[edge-attr-vjp] downstream activations are detached; "
-                "remove `.detach()` inside your SAE hook or clone with "
-                "`.requires_grad_()` earlier in the graph."
-            )
-        return feats
-
-    # 3. Single forward pass (re-used for every downstream feature)
-    down_base = _forward_fn()
-    down_grad = (
-        res_sae_effects[down_hook].to(device)
-        if edge_includes_loss_grad else None
-    )
-
-    # Container: (down_idx, up_idx) → list[val]
-    bucket: Dict[Tuple[FeatureIndex, FeatureIndex], List[torch.Tensor]] = {}
-
-    # 4. Loop over downstream features (rows of the Jacobian)
-    for d_idx in down_feats:
-        # Select the scalar we will back-prop; optionally weight by loss grad
-        scalar_field = down_base[..., d_idx]
-        if down_grad is not None:
-            scalar_field = scalar_field * down_grad[..., d_idx]
-        scalar = scalar_field.sum()
-
-        # Jᵀ ▽  – gradient w.r.t. *entire* upstream latent tensor
-        grad_tensor = torch.autograd.grad(
-            scalar,
-            up_base,
-            retain_graph=True,
-            create_graph=False,
-        )[0]
-
-        # Accumulate entries we care about
-        for u_idx in up_feats:
-            val = grad_tensor[..., u_idx].sum()
-            if val.abs() < 1e-6:
-                continue
-            bucket.setdefault((d_idx, u_idx), []).append(val.detach().cpu())
-
-        if logstats and (d_idx == down_feats[0] or d_idx % 10 == 0):
-            print(f"[edge-attr-vjp] processed downstream idx {d_idx}")
-
-    # 5. Assemble sparse COO tensor
-    if not bucket:
-        return None
-
-    idxs, vals = zip(
-        *[((d, u), torch.stack(v).mean()) for (d, u), v in bucket.items()]
-    )
-    idx_mat = torch.tensor(list(zip(*idxs)), dtype=torch.long)
-    val_mat = torch.stack(list(vals))
-
-    edge_tensor = torch.sparse_coo_tensor(
-        idx_mat,
-        val_mat,
-        size=(len(down_feats), len(up_feats)),
-    ).coalesce()
-
-    if logstats:
-        nnz = edge_tensor._nnz()
-        print(f"[edge-attr-vjp] finished – {nnz} non-zero entries")
-
-    return edge_tensor
+# Removed unused _compute_jvp_edge_v2 function - edge attribution is implemented inline in analyze_layer_pair
 
 
 def setup_models_and_data(
@@ -652,8 +499,9 @@ def analyze_layer_pair(
         # Create all_connections format for this layer pair
         all_connections: List[ConnectionTuple] = []
         for i in range(len(down_indices)):
-            down_idx = down_feats[down_indices[i]]
-            up_idx = up_feats[up_indices[i]]
+            # The indices are already the actual feature indices, not indices into the feature lists
+            down_idx = down_indices[i]
+            up_idx = up_indices[i]
             val = edge_values[i]
             all_connections.append((up_idx, down_idx, val))
         
