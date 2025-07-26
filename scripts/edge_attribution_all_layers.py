@@ -544,15 +544,31 @@ def load_interpretable_features() -> Dict[LayerIndex, Dict[FeatureIndex, str]]:
         488: "AB_Hydrolase_fold", 2677: "FAD/NAD", 2775: "Transketolase", 2166: "DHFR"
     }
     
+    l12_latents: Dict[FeatureIndex, str] = {
+        2112: "AB_Hydrolase_fold", 3536: "SAM_mtases", 1256: "FAM", 2797: "Aldolase", 
+        3794: "SAM_mtases", 3035: "WD40", 2302: "HotDog"
+    }
+    
+    l16_latents: Dict[FeatureIndex, str] = {
+        1504: "AB_Hydrolase_fold"
+    }
+    
+    l20_latents: Dict[FeatureIndex, str] = {
+        3615: "AB_Hydrolase_fold", 878: "Kinase"
+    }
+    
+    l24_latents: Dict[FeatureIndex, str] = {
+        2586: "Pectin lyase", 1822: "Kinase"
+    }
+    
     # You can extend this to include interpretable features for other layers
     interpretable_features: Dict[LayerIndex, Dict[FeatureIndex, str]] = {
         4: l4_latents,
         8: l8_latents,
-        # Add more layers as needed
-        12: {},
-        16: {},
-        20: {},
-        24: {},
+        12: l12_latents,
+        16: l16_latents,
+        20: l20_latents,
+        24: l24_latents,
         28: {}
     }
     
