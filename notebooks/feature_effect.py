@@ -75,7 +75,7 @@ sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
 fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
 
 # Choose protein for analysis
-protein = "2B61A"
+protein = "1PVGA" #"2B61A"
 seq = seq_dict[protein]
 position = sse_dict[protein][0]
 
@@ -216,11 +216,12 @@ print(f"\nCausal ranking complete!")
 print(f"SAE effects shape: {all_effects_sae_ALS.shape}")
 
 # %%
-def find_k_for_recovery_threshold(target_layer: int, target_recovery: float, 
+def find_k_for_recovery_threshold(target_layer: int, target_recovery_percent: float, 
                                 all_effects_sae_ALS: torch.Tensor,
                                 clean_layer_caches: Dict, corr_layer_caches: Dict,
                                 clean_layer_errors: Dict, 
-                                max_k: int = 1000, step_size: int = 10) -> Tuple[int, float]:
+                                max_k: int = 1000, step_size: int = 10, baseline_recovery: float = 0.0, 
+                                r0_percent: float = 0.0) -> Tuple[int, float]:
     """
     Find the number of top-k features needed to reach a target recovery threshold.
     
@@ -241,22 +242,26 @@ def find_k_for_recovery_threshold(target_layer: int, target_recovery: float,
         
         target_effect_sae_LS = all_effects_sae_ALS[layer_2_saelayer[target_layer]]
         target_effect_sae_flat_LxS = target_effect_sae_LS.reshape(-1)
-        
-        # Get top-k indices (largest=False for most negative effects)
-        top_rank_vals, top_idx = torch.topk(target_effect_sae_flat_LxS, k=k_value, largest=False, sorted=True)
-        
-        # Convert flattened indices back to 2D coordinates
-        L, S = target_effect_sae_LS.shape
-        row_indices = top_idx // S
-        col_indices = top_idx % S
-        
-        # Create mask - start with all True (patch), set False for positions to not patch
-        sae_mask_LS = torch.ones((L, S), dtype=torch.bool, device=device)
-        
-        for i in range(len(top_idx)):
-            row = row_indices[i]
-            col = col_indices[i]
-            sae_mask_LS[row, col] = False
+
+        if k_value == 0:
+            # Special case: no features active (all patched)
+            sae_mask_LS = torch.ones(target_effect_sae_LS.shape, dtype=torch.bool, device=device)
+        else:
+            # Get top-k indices (largest=False for most negative effects)
+            top_rank_vals, top_idx = torch.topk(target_effect_sae_flat_LxS, k=k_value, largest=False, sorted=True)
+            
+            # Convert flattened indices back to 2D coordinates
+            L, S = target_effect_sae_LS.shape
+            row_indices = top_idx // S
+            col_indices = top_idx % S
+            
+            # Create mask - start with all True (patch), set False for positions to not patch
+            sae_mask_LS = torch.ones((L, S), dtype=torch.bool, device=device)
+            
+            for i in range(len(top_idx)):
+                row = row_indices[i]
+                col = col_indices[i]
+                sae_mask_LS[row, col] = False
         
         # Set up hook for patching
         hook = SAEHookProt(
@@ -281,6 +286,14 @@ def find_k_for_recovery_threshold(target_layer: int, target_recovery: float,
             recovery = recovery.cpu().item()
         
         return recovery
+    # First, calculate r0 (performance with k=0)
+    print(f"Calculating r0 (k=0 performance) for layer {target_layer}...")
+    r0 = patch_top_k_features_local(0)
+    print(f"  r0: {r0:.4f}")
+    
+    # Calculate target recovery threshold
+    target_recovery = target_recovery_percent * (baseline_recovery - r0_percent * r0) + r0_percent * r0
+    print(f"  Target recovery threshold ({target_recovery_percent*100:.0f}% of improvement): {target_recovery:.4f}")
     
     # Binary search approach
     low_k = 1
@@ -314,17 +327,22 @@ def find_k_for_recovery_threshold(target_layer: int, target_recovery: float,
     return best_k, best_recovery
 
 # %%
-# Find the number of latents needed for each layer to reach 60% of baseline performance
-target_recovery_threshold = 0.60 * baseline_recovery
-print(f"Target recovery threshold (60% of baseline): {target_recovery_threshold:.4f}")
 
+0.6 * baseline_recovery
+
+# %%
+# Find the number of latents needed for each layer to reach 60% of baseline performance
+# target_recovery_threshold = 0.65 * baseline_recovery
+# print(f"Target recovery threshold (60% of baseline): {target_recovery_threshold:.4f}")
+target_recovery_percent = 0.6
 layer_circuit_sizes = {}
 layer_circuit_recoveries = {}
 
 for layer in main_layers:
     k, recovery = find_k_for_recovery_threshold(
-        layer, target_recovery_threshold, all_effects_sae_ALS,
-        clean_layer_caches, corr_layer_caches, clean_layer_errors
+        layer, target_recovery_percent, all_effects_sae_ALS,
+        clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
+        r0_percent=0.0 if (layer != 8 and layer != 4) else 0.6
     )
     layer_circuit_sizes[layer] = k
     layer_circuit_recoveries[layer] = recovery
@@ -333,6 +351,14 @@ print(f"\nCircuit sizes for 60% baseline recovery:")
 for layer in main_layers:
     print(f"Layer {layer}: {layer_circuit_sizes[layer]} features (recovery: {layer_circuit_recoveries[layer]:.4f})")
 
+# %%
+# layer = main_layers[1]
+# target_recovery_percent = 0.6
+# k, recovery = find_k_for_recovery_threshold(
+#         layer, target_recovery_percent, all_effects_sae_ALS,
+#         clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
+#         r0_percent=0.6
+#     )
 # %%
 def get_top_k_feature_indices(layer: int, k: int, all_effects_sae_ALS: torch.Tensor) -> List[Tuple[int, int]]:
     """
@@ -437,6 +463,13 @@ def test_feature_cluster_exclusion(layer: int, cluster_dict: Dict[int, str],
     return percentage, recovery
 
 # %%
+layer_circuit_sizes
+# %%
+
+# print the top k features for each layer 
+for layer in main_layers:
+    print(f"Layer {layer}: {get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)}")
+# %%
 # MANUAL FEATURE CLUSTER DEFINITIONS
 # You can modify these dictionaries to define your feature clusters for each layer
 
@@ -465,12 +498,49 @@ feature_clusters = {
     # Add more layers and clusters as needed...
 }
 
+feature_clusters_1pvg = {
+    4: {
+        "direct_motif_detectors": {1509:"E", 2511:"X'XQ", 2112:"YXX'", 3069: "GX'", 3544: "C", 2929: "N"},
+        "indirect_motif_detectors": {3170: "X'N", 3717:"V", 527: "DX'", 3229: "IXX'", 1297: "I", 1468: "X'XXN", 1196: "D"},
+        "motif_detectors": {1509:"E", 2511:"X'XQ", 2112:"YXX'", 3069: "GX'", 3544: "C", 2929: "N", 3170: "X'N", 3717:"V", 527: "DX'", 3229: "IXX'", 1297: "I", 1468: "X'XXN", 1196: "D"}
+    },
+    8: {
+        # "direct_motif_detectors": {},
+        "indirect_motif_detectors": {1916: "NX'XXNA"},
+        # "motif_detectors": {}, 
+        "annotated_domain_detector": {2529:"Hatpase_C", 3159: "Hatpase_C", 3903: "Hatpase_C", 1055: "Hatpase_C", 2066: "Hatpase_C"},
+    },
+    12: {
+        "annotated_domain_detector": {3943: "Hatpase_C", 1796: "Hatpase_C", 1204: "Hatpase_C", 1145:  "Hatpase_C"},
+        "misc_domain_detector": {1082: "XPG-I", 2472: "Kinesin"},
+        "domain_detectors": {3943: "Hatpase_C", 1796: "Hatpase_C", 1204: "Hatpase_C", 1145:  "Hatpase_C", 1082: "XPG-I", 2472: "Kinesin"},
+    },
+    16: {
+        "annotated_domain_detector": {3077: "Hatpase_C", 1353: "Hatpase_C", 1597: "Hatpase_C", 1814: "Hatpase_C", 3994: "Ribosomal", 1166: "Hatpase_C"},
+        # "misc_domain_detector": {},
+        # "domain_detectors": {3077: "Hatpase_C", 1353: "Hatpase_C", 1597: "Hatpase_C", 1814: "Hatpase_C", 3994: "Ribosomal", 1166: "Hatpase_C"},
+    }
+}
+
 print("Feature clusters defined. You can modify the 'feature_clusters' dictionary above to specify your clusters.")
 print("\nExample cluster structure:")
-for layer, clusters in feature_clusters.items():
+for layer, clusters in feature_clusters_1pvg.items():
     print(f"Layer {layer}:")
     for cluster_name, indices in clusters.items():
         print(f"  {cluster_name}: {len(indices)} features")
+
+# %%
+
+for layer in main_layers[:4]:
+    latents = get_top_k_feature_indices(layer, layer_circuit_sizes[layer]+8, all_effects_sae_ALS)
+    latents = [latent for token_idx, latent in latents]
+    # print(f"Layer {layer} latents: {latents}")
+    cluster_dict = feature_clusters_1pvg[layer]
+    for cluster_name, indices in cluster_dict.items():
+        # print(f"  {cluster_name}: {indices}")
+        cluster_len = len(indices)
+        circuit_len = len([latent for latent in latents if latent in indices.keys()])
+        print(f"Layer {layer}  {cluster_name}: {circuit_len}/{cluster_len} features in circuit")
 
 # %%
 
@@ -537,6 +607,58 @@ def analyze_all_feature_clusters(feature_clusters: Dict, layer_circuit_sizes: Di
         Dictionary with analysis results for each layer and cluster
     """
     
+    def calculate_baseline_performance(layer: int, circuit_size: int) -> float:
+        """Calculate baseline performance for a layer using top-k circuit features"""
+        sae_model = saes[layer_2_saelayer[layer]]
+        sae_model.mean_error = clean_layer_errors[layer]
+        
+        target_effect_sae_LS = all_effects_sae_ALS[layer_2_saelayer[layer]]
+        target_effect_sae_flat_LxS = target_effect_sae_LS.reshape(-1)
+
+        if circuit_size == 0:
+            # Special case: no features active (all patched)
+            sae_mask_LS = torch.ones(target_effect_sae_LS.shape, dtype=torch.bool, device=device)
+        else:
+            # Get top-k indices (largest=False for most negative effects)
+            top_rank_vals, top_idx = torch.topk(target_effect_sae_flat_LxS, k=circuit_size, largest=False, sorted=True)
+            
+            # Convert flattened indices back to 2D coordinates
+            L, S = target_effect_sae_LS.shape
+            row_indices = top_idx // S
+            col_indices = top_idx % S
+            
+            # Create mask - start with all True (patch), set False for positions to not patch
+            sae_mask_LS = torch.ones((L, S), dtype=torch.bool, device=device)
+            
+            for i in range(len(top_idx)):
+                row = row_indices[i]
+                col = col_indices[i]
+                sae_mask_LS[row, col] = False
+        
+        # Set up hook for patching
+        hook = SAEHookProt(
+            sae=sae_model,
+            mask_BL=clean_batch_mask_BL,
+            patch_mask_BLS=sae_mask_LS.to(device),
+            patch_value=corr_layer_caches[layer].to(device),
+            use_mean_error=True,
+        )
+        handle = esm_transformer.esm.encoder.layer[layer].register_forward_hook(hook)
+        
+        # Forward pass & metric
+        with torch.no_grad():
+            preds_LL = esm_transformer.predict_contacts(clean_batch_tokens_BL, clean_batch_mask_BL)[0]
+        recovery = _patching_metric(preds_LL)
+        
+        # Clean up
+        handle.remove()
+        cleanup_cuda()
+        
+        if isinstance(recovery, torch.Tensor):
+            recovery = recovery.cpu().item()
+        
+        return recovery
+    
     results = {}
     
     for layer, clusters in feature_clusters.items():
@@ -556,7 +678,11 @@ def analyze_all_feature_clusters(feature_clusters: Dict, layer_circuit_sizes: Di
         
         layer_results = {}
         circuit_size = layer_circuit_sizes[layer]
-        baseline_performance = layer_circuit_recoveries[layer]
+        
+        # Recalculate baseline performance fresh
+        print(f"Recalculating baseline performance for layer {layer}...")
+        baseline_performance = calculate_baseline_performance(layer, circuit_size)
+        print(f"Baseline performance: {baseline_performance:.4f}")
         
         for cluster_name, cluster_dict in clusters.items():
             print(f"\nTesting {cluster_name} ({len(cluster_dict)} features)...")
@@ -606,8 +732,9 @@ def analyze_all_feature_clusters(feature_clusters: Dict, layer_circuit_sizes: Di
 # %%
 # Run the feature cluster analysis
 print("Starting feature cluster analysis...")
+added_layer_circuit_sizes = {layer: layer_circuit_sizes[layer] + 8 for layer in main_layers}
 cluster_analysis_results = analyze_all_feature_clusters(
-    feature_clusters, layer_circuit_sizes, all_effects_sae_ALS,
+    feature_clusters_1pvg, added_layer_circuit_sizes, all_effects_sae_ALS,
     clean_layer_caches, corr_layer_caches, clean_layer_errors
 )
 
@@ -753,5 +880,107 @@ with open('../results/feature_cluster_analysis.pkl', 'wb') as f:
 print("Results saved to '../results/feature_cluster_analysis.pkl'")
 print("\nAnalysis complete!")
 
+
+# %%
+
+import json 
+
+with open('/project/pi_annagreen_umass_edu/jatin/plm_circuits/layer_latent_dict_2b61.json', 'r') as f:
+    latent_circuit = json.load(f)
+print(latent_circuit)
+
+# %%
+
+def find_layer_for_latent(latent_idx: int, latent_circuit: dict) -> str:
+    """
+    Find which layer a specific latent index belongs to.
+    
+    Args:
+        latent_idx: The latent index to search for
+        latent_circuit: Dictionary with layer keys and latent lists as values
+    
+    Returns:
+        Layer string if found, None if not found
+    """
+    for layer, latents in latent_circuit.items():
+        if latent_idx in latents:
+            return layer
+    return None
+
+def get_all_latents_with_layers(latent_circuit: dict) -> list:
+    """
+    Get all latents with their corresponding layers as (layer, latent_idx) tuples.
+    
+    Args:
+        latent_circuit: Dictionary with layer keys and latent lists as values
+    
+    Returns:
+        List of (layer, latent_idx) tuples
+    """
+    all_latents = []
+    for layer, latents in latent_circuit.items():
+        for latent_idx in latents:
+            all_latents.append((layer, latent_idx))
+    return all_latents
+
+def get_latent_by_global_index(global_idx: int, latent_circuit: dict) -> tuple:
+    """
+    Get layer and latent index by global position in the flattened circuit.
+    
+    Args:
+        global_idx: Position in the flattened list of all latents across layers
+        latent_circuit: Dictionary with layer keys and latent lists as values
+    
+    Returns:
+        Tuple of (layer, latent_idx) if valid index, None if out of bounds
+    """
+    all_latents = get_all_latents_with_layers(latent_circuit)
+    if 0 <= global_idx < len(all_latents):
+        return all_latents[global_idx]
+    return None
+
+def get_layer_latent_counts(latent_circuit: dict) -> dict:
+    """
+    Get count of latents per layer.
+    
+    Args:
+        latent_circuit: Dictionary with layer keys and latent lists as values
+    
+    Returns:
+        Dictionary with layer as key and count as value
+    """
+    return {layer: len(latents) for layer, latents in latent_circuit.items()}
+
+# Example usage:
+print("Utility functions for latent_circuit analysis:")
+print("\n1. Find layer for specific latent:")
+example_latent = 2311
+layer = find_layer_for_latent(example_latent, latent_circuit)
+print(f"Latent {example_latent} belongs to layer: {layer}")
+
+print("\n2. Get all latents with layers (first 10):")
+all_latents = get_all_latents_with_layers(latent_circuit)
+for i, (layer, latent) in enumerate(all_latents[:10]):
+    print(f"Global index {i}: Layer {layer}, Latent {latent}")
+
+print("\n3. Get latent by global index:")
+global_idx = 5
+result = get_latent_by_global_index(global_idx, latent_circuit)
+if result:
+    layer, latent = result
+    print(f"Global index {global_idx}: Layer {layer}, Latent {latent}")
+
+print("\n4. Latent counts per layer:")
+counts = get_layer_latent_counts(latent_circuit)
+for layer, count in counts.items():
+    print(f"Layer {layer}: {count} latents")
+
+print(f"\nTotal latents across all layers: {len(all_latents)}")
+# %%
+global_indices = [44, 57, 90, 109, 138, 152, 155]
+
+for global_idx in global_indices:
+    layer, latent = get_latent_by_global_index(global_idx, latent_circuit)
+    print(f"Global index {global_idx}: Layer {layer}, Latent {latent}")
 
 # %%
