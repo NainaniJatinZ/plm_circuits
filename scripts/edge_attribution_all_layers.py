@@ -62,7 +62,7 @@ EdgeResults = Dict[str, Any]
 def setup_models_and_data(
     device: torch.device, 
     main_layers: List[LayerIndex], 
-    protein: str = "2B61A"
+    protein: str = "1PVGA"
 ) -> Dict[str, Any]:
     """Setup ESM model, SAEs, and protein sequence data"""
     print(f"Setting up models and data for protein {protein}")
@@ -113,7 +113,8 @@ def setup_models_and_data(
         'ss1_end': ss1_end,
         'ss2_start': ss2_start,
         'ss2_end': ss2_end,
-        'fl_dict': fl_dict
+        'fl_dict': fl_dict,
+        'protein': protein
     }
 
 
@@ -129,7 +130,7 @@ def prepare_sequences(
     ss1_start, ss1_end = setup_data['ss1_start'], setup_data['ss1_end']
     ss2_start, ss2_end = setup_data['ss2_start'], setup_data['ss2_end']
     fl_dict = setup_data['fl_dict']
-    protein = "2B61A"  # hardcoded for now
+    protein = setup_data['protein']
     
     # Prepare full sequence and get baseline contact predictions
     full_seq_L = [(1, seq)]
@@ -534,32 +535,52 @@ def load_interpretable_features() -> Dict[LayerIndex, Dict[FeatureIndex, str]]:
     else:
         layer_latent_dict = {}
     
-    # Hardcoded interpretable features (from original notebook)
+    # # Hardcoded interpretable features (from original notebook)
+    # l4_latents: Dict[FeatureIndex, str] = {
+    #     340: "FX'", 237: "FX'", 3788: "X'XI", 798: "D'XXGN", 1690: "X'XXF", 
+    #     2277: "G", 2311: "X'XM", 3634: "X'XXXG", 1682: "PXXXXXX'", 3326: "H"
+    # }
+    # 
+    # l8_latents: Dict[FeatureIndex, str] = {
+    #     488: "AB_Hydrolase_fold", 2677: "FAD/NAD", 2775: "Transketolase", 2166: "DHFR"
+    # }
+    # 
+    # l12_latents: Dict[FeatureIndex, str] = {
+    #     2112: "AB_Hydrolase_fold", 3536: "SAM_mtases", 1256: "FAM", 2797: "Aldolase", 
+    #     3794: "SAM_mtases", 3035: "WD40", 2302: "HotDog"
+    # }
+    # 
+    # l16_latents: Dict[FeatureIndex, str] = {
+    #     1504: "AB_Hydrolase_fold"
+    # }
+    # 
+    # l20_latents: Dict[FeatureIndex, str] = {
+    #     3615: "AB_Hydrolase_fold", 878: "Kinase"
+    # }
+    # 
+    # l24_latents: Dict[FeatureIndex, str] = {
+    #     2586: "Pectin lyase", 1822: "Kinase"
+    # }
+    
     l4_latents: Dict[FeatureIndex, str] = {
-        340: "FX'", 237: "FX'", 3788: "X'XI", 798: "D'XXGN", 1690: "X'XXF", 
-        2277: "G", 2311: "X'XM", 3634: "X'XXXG", 1682: "PXXXXXX'", 3326: "H"
+        1509:"E", 2511:"X'XQ", 2112:"YXX'", 3069: "GX'", 3544: "C", 2929: "N", 3170: "X'N", 3717:"V", 527: "DX'", 3229: "IXX'", 1297: "I", 1468: "X'XXN", 1196: "D"
     }
     
     l8_latents: Dict[FeatureIndex, str] = {
-        488: "AB_Hydrolase_fold", 2677: "FAD/NAD", 2775: "Transketolase", 2166: "DHFR"
+        1916: "NX'XXNA", 2529:"Hatpase_C", 3159: "Hatpase_C", 3903: "Hatpase_C", 1055: "Hatpase_C", 2066: "Hatpase_C"
     }
     
     l12_latents: Dict[FeatureIndex, str] = {
-        2112: "AB_Hydrolase_fold", 3536: "SAM_mtases", 1256: "FAM", 2797: "Aldolase", 
-        3794: "SAM_mtases", 3035: "WD40", 2302: "HotDog"
+        3943: "Hatpase_C", 1796: "Hatpase_C", 1204: "Hatpase_C", 1145:  "Hatpase_C", 1082: "XPG-I", 2472: "Kinesin"
     }
     
     l16_latents: Dict[FeatureIndex, str] = {
-        1504: "AB_Hydrolase_fold"
+        3077: "Hatpase_C", 1353: "Hatpase_C", 1597: "Hatpase_C", 1814: "Hatpase_C", 3994: "Ribosomal", 1166: "Hatpase_C"
     }
     
-    l20_latents: Dict[FeatureIndex, str] = {
-        3615: "AB_Hydrolase_fold", 878: "Kinase"
-    }
+    l20_latents: Dict[FeatureIndex, str] = {}
     
-    l24_latents: Dict[FeatureIndex, str] = {
-        2586: "Pectin lyase", 1822: "Kinase"
-    }
+    l24_latents: Dict[FeatureIndex, str] = {}
     
     # You can extend this to include interpretable features for other layers
     interpretable_features: Dict[LayerIndex, Dict[FeatureIndex, str]] = {
@@ -804,11 +825,11 @@ def save_results(
 def main() -> None:
     parser = argparse.ArgumentParser(description='Edge Attribution Analysis Across All Layer Combinations')
     parser.add_argument('--device', default='cuda', help='Device to use (cuda/cpu)')
-    parser.add_argument('--protein', default='2B61A', help='Protein to analyze')
+    parser.add_argument('--protein', default='1PVGA', help='Protein to analyze')
     parser.add_argument('--layers', nargs='+', type=int, default=[4, 8, 12, 16, 20, 24, 28], 
                        help='Layers to analyze')
     parser.add_argument('--top-k', type=int, default=50, help='Number of top features per layer')
-    parser.add_argument('--output-dir', default='./edge_attribution_results', 
+    parser.add_argument('--output-dir', default='./edge_attribution_results_all_layer_top2', 
                        help='Output directory for results')
     parser.add_argument('--max-pairs', type=int, default=None, 
                        help='Maximum number of layer pairs to analyze (for testing)')
