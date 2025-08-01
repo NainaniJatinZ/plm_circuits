@@ -75,7 +75,7 @@ sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
 fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
 
 # Choose protein for analysis
-protein = "1PVGA" #"2B61A"
+protein = "2B61A" #"1PVGA" #"2B61A"
 seq = seq_dict[protein]
 position = sse_dict[protein][0]
 
@@ -334,7 +334,7 @@ def find_k_for_recovery_threshold(target_layer: int, target_recovery_percent: fl
 # Find the number of latents needed for each layer to reach 60% of baseline performance
 # target_recovery_threshold = 0.65 * baseline_recovery
 # print(f"Target recovery threshold (60% of baseline): {target_recovery_threshold:.4f}")
-target_recovery_percent = 0.6
+target_recovery_percent = 0.7
 layer_circuit_sizes = {}
 layer_circuit_recoveries = {}
 
@@ -342,14 +342,26 @@ for layer in main_layers:
     k, recovery = find_k_for_recovery_threshold(
         layer, target_recovery_percent, all_effects_sae_ALS,
         clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
-        r0_percent=0.0 if (layer != 8 and layer != 4) else 0.6
+        r0_percent=0.0 #if (layer != 8 and layer != 4) else 0.6
     )
     layer_circuit_sizes[layer] = k
     layer_circuit_recoveries[layer] = recovery
 
-print(f"\nCircuit sizes for 60% baseline recovery:")
+print(f"\nCircuit sizes for {target_recovery_percent*100:.0f}% baseline recovery:")
 for layer in main_layers:
     print(f"Layer {layer}: {layer_circuit_sizes[layer]} features (recovery: {layer_circuit_recoveries[layer]:.4f})")
+
+# %%
+# layer = 4
+# for target_recovery_percent in [0.6, 0.65, 0.7, 0.75, 0.8]:
+#     k, recovery = find_k_for_recovery_threshold(
+#             layer, target_recovery_percent, all_effects_sae_ALS,
+#             clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
+#             r0_percent=0.0 #if (layer != 8 and layer != 4) else 0.6
+#         )
+#     print(f"Layer {layer} target recovery {target_recovery_percent}: {k} features (recovery: {recovery:.4f})")
+
+
 
 # %%
 # layer = main_layers[1]
@@ -469,6 +481,20 @@ layer_circuit_sizes
 # print the top k features for each layer 
 for layer in main_layers:
     print(f"Layer {layer}: {get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)}")
+
+# %% record the layer latent dict, only storing the latents, not the tokens
+layer_latent_dict = {}
+for layer in main_layers:
+    layer_latent_dict[layer] = [latent for _, latent in get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)]
+
+# %%
+layer_latent_dict
+
+# %% save the layer latent dict as a json file
+import json
+with open('/project/pi_annagreen_umass_edu/jatin/plm_circuits/layer_latent_dict_metx.json', 'w') as f:
+    json.dump(layer_latent_dict, f)
+
 # %%
 # MANUAL FEATURE CLUSTER DEFINITIONS
 # You can modify these dictionaries to define your feature clusters for each layer
@@ -524,23 +550,24 @@ feature_clusters_1pvg = {
 
 print("Feature clusters defined. You can modify the 'feature_clusters' dictionary above to specify your clusters.")
 print("\nExample cluster structure:")
-for layer, clusters in feature_clusters_1pvg.items():
+for layer, clusters in feature_clusters.items(): #feature_clusters_1pvg.items():
     print(f"Layer {layer}:")
     for cluster_name, indices in clusters.items():
         print(f"  {cluster_name}: {len(indices)} features")
 
 # %%
-
-for layer in main_layers[:4]:
-    latents = get_top_k_feature_indices(layer, layer_circuit_sizes[layer]+8, all_effects_sae_ALS)
+# temp_layer_circuit_sizes = {4:29, 8:17, 12:18, 16:25}
+for layer in main_layers[:3]: #[:4]:
+    latents = get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)
     latents = [latent for token_idx, latent in latents]
     # print(f"Layer {layer} latents: {latents}")
-    cluster_dict = feature_clusters_1pvg[layer]
+    cluster_dict = feature_clusters[layer] #feature_clusters_1pvg[layer]
     for cluster_name, indices in cluster_dict.items():
         # print(f"  {cluster_name}: {indices}")
         cluster_len = len(indices)
         circuit_len = len([latent for latent in latents if latent in indices.keys()])
         print(f"Layer {layer}  {cluster_name}: {circuit_len}/{cluster_len} features in circuit")
+        print(layer_circuit_sizes[layer])
 
 # %%
 
@@ -732,9 +759,10 @@ def analyze_all_feature_clusters(feature_clusters: Dict, layer_circuit_sizes: Di
 # %%
 # Run the feature cluster analysis
 print("Starting feature cluster analysis...")
-added_layer_circuit_sizes = {layer: layer_circuit_sizes[layer] + 8 for layer in main_layers}
+# added_layer_circuit_sizes = {layer: layer_circuit_sizes[layer] + 8 for layer in main_layers}
+# added_layer_circuit_sizes = temp_layer_circuit_sizes#{4:29, 8:17, 12:18, 16:25}
 cluster_analysis_results = analyze_all_feature_clusters(
-    feature_clusters_1pvg, added_layer_circuit_sizes, all_effects_sae_ALS,
+    feature_clusters, layer_circuit_sizes, all_effects_sae_ALS,
     clean_layer_caches, corr_layer_caches, clean_layer_errors
 )
 
@@ -874,11 +902,22 @@ results_to_save = {
     'main_layers': main_layers
 }
 
-with open('../results/feature_cluster_analysis.pkl', 'wb') as f:
+with open('../results/feature_cluster_analysis_metx.pkl', 'wb') as f:
     pickle.dump(results_to_save, f)
 
-print("Results saved to '../results/feature_cluster_analysis.pkl'")
+print("Results saved to '../results/feature_cluster_analysis_metx.pkl'")
 print("\nAnalysis complete!")
+
+
+# %% load the pickle back in 
+import pickle
+
+with open('../results/feature_cluster_analysis.pkl', 'rb') as f:
+    results_to_load = pickle.load(f)
+
+print(results_to_load)
+
+
 
 
 # %%
