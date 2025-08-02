@@ -33,7 +33,7 @@ export HF_HOME=/mnt/polished-lake/home/connor/plm_circuits/.cache/huggingface
 mkdir -p $TORCH_HOME $TRANSFORMERS_CACHE $HF_HOME /mnt/polished-lake/home/connor/plm_circuits/.cache/models
 
 # Run the analysis
-python scripts/edge_attribution_all_layers.py
+python scripts/edge_attribution_all_layers_jvp.py
 
 echo "========================================="
 echo "Analysis completed at $(date)"
