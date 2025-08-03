@@ -508,7 +508,25 @@ print(f"Score change: {corrupted_score - baseline_score:.6f}")
 
 # %%
 
+"""
+for neuron1 in l4:
+    # get acts of l4 neuron1 when zero ablating or ablating with corrupted seq (prefer corrupted)
+    corr_hook 
 
+    for neuron2 in l8:
+        # record change in acts of l8 neuron2 when zero ablating or ablating with corrupted seq (prefer corrupted)
+        cache_hook 
+
+        # put changed acts of l8 neuron2 in corr_hook 
+        corr_hook2
+
+        # record change in recovery between clean l8 and corrupted hook 2 run 
+        IE (neuron1, neuron2) = delta m 
+"""
+
+
+
+# %%
 
 # Analyze the activation changes for causally important features in layer 8
 activation_diff = corrupted_acts_layer8 - baseline_acts_layer8
