@@ -1,0 +1,131 @@
+================================================================================
+TOP 20% EDGE ANALYSIS WITH INTERPRETABLE FEATURES
+================================================================================
+
+Analyzing top 20% edges (5147 edges)
+Area under curve for top 20%: 13.3987
+Fraction of total AUC captured: 0.776 (77.6%)
+
+====================================================================================================
+INTERPRETABLE EDGES (Both upstream and downstream latents are interpretable)
+====================================================================================================
+Rank   Up Layer Up Latent  Up Feature      Down Layer Down Latent  Down Feature    Metric Change
+----------------------------------------------------------------------------------------------------
+317    4        3326       H               12         2112         AB_Hydrolase_fold0.006981    
+326    4        3634       X'XXXG          8          2677         FAD/NAD         -0.006893   
+413    4        2277       G               8          2677         FAD/NAD         -0.006000   
+466    4        237        FX'             8          2775         Transketolase   0.005616    
+807    4        3634       X'XXXG          12         2112         AB_Hydrolase_fold-0.004011   
+828    4        3788       X'XI            12         2112         AB_Hydrolase_fold0.003952    
+832    4        3326       H               12         1256         FAM             0.003922    
+907    4        3326       H               12         2797         Aldolase        0.003693    
+943    4        3634       X'XXXG          12         1256         FAM             -0.003561   
+947    8        2775       Transketolase   12         2112         AB_Hydrolase_fold-0.003555   
+961    4        1690       X'XXF           12         2112         AB_Hydrolase_fold-0.003528   
+1007   4        1682       PXXXXXX'        8          2677         FAD/NAD         -0.003406   
+1112   4        340        FX'             12         2112         AB_Hydrolase_fold-0.003146   
+1187   4        237        FX'             12         2112         AB_Hydrolase_fold0.002977    
+1417   4        237        FX'             8          488          AB_Hydrolase_fold0.002605    
+1481   4        3326       H               12         3536         SAM_mtases      0.002497    
+1596   4        3634       X'XXXG          12         2797         Aldolase        -0.002318   
+1628   4        237        FX'             12         1256         FAM             0.002278    
+1660   4        3788       X'XI            12         1256         FAM             0.002245    
+1725   4        3326       H               8          488          AB_Hydrolase_fold0.002172    
+1814   4        1690       X'XXF           12         1256         FAM             -0.002097   
+1819   4        237        FX'             12         2797         Aldolase        0.002092    
+1919   8        2775       Transketolase   12         1256         FAM             -0.001992   
+1971   4        1690       X'XXF           12         3536         SAM_mtases      -0.001945   
+1983   4        1682       PXXXXXX'        12         2112         AB_Hydrolase_fold-0.001936   
+2020   4        3326       H               8          2677         FAD/NAD         0.001909    
+2033   4        3326       H               12         3794         SAM_mtases      0.001901    
+2036   8        2775       Transketolase   12         2797         Aldolase        -0.001898   
+2054   4        3326       H               16         1504         AB_Hydrolase_fold-0.001882   
+2106   4        1690       X'XXF           12         2797         Aldolase        -0.001840   
+2141   4        2311       X'XM            8          2677         FAD/NAD         -0.001815   
+2249   4        3634       X'XXXG          8          2775         Transketolase   -0.001743   
+2340   4        3788       X'XI            12         2797         Aldolase        0.001690    
+2357   4        3634       X'XXXG          12         3794         SAM_mtases      -0.001683   
+2464   8        2677       FAD/NAD         12         2112         AB_Hydrolase_fold-0.001619   
+2504   4        2277       G               12         1256         FAM             -0.001592   
+2635   4        3326       H               12         3035         WD40            0.001519    
+2657   4        3634       X'XXXG          8          488          AB_Hydrolase_fold-0.001506   
+2796   8        488        AB_Hydrolase_fold12         2112         AB_Hydrolase_fold-0.001420   
+2811   4        1682       PXXXXXX'        12         1256         FAM             -0.001409   
+2858   4        1682       PXXXXXX'        12         2797         Aldolase        -0.001390   
+2866   4        237        FX'             8          2166         DHFR            -0.001386   
+3007   4        237        FX'             16         1504         AB_Hydrolase_fold-0.001332   
+3011   4        3634       X'XXXG          16         1504         AB_Hydrolase_fold0.001331    
+3139   8        2677       FAD/NAD         12         3794         SAM_mtases      -0.001278   
+3632   4        1690       X'XXF           8          488          AB_Hydrolase_fold-0.001093   
+3688   4        2277       G               8          2775         Transketolase   -0.001076   
+3866   4        3788       X'XI            8          2677         FAD/NAD         0.001019    
+3980   8        2775       Transketolase   12         3536         SAM_mtases      -0.000985   
+4156   4        2311       X'XM            16         1504         AB_Hydrolase_fold0.000945    
+4173   4        2277       G               8          488          AB_Hydrolase_fold-0.000941   
+4202   4        3326       H               20         878          Kinase          0.000936    
+4229   4        1690       X'XXF           12         3035         WD40            -0.000928   
+4312   8        2677       FAD/NAD         12         2797         Aldolase        -0.000907   
+4505   4        2277       G               12         2112         AB_Hydrolase_fold-0.000869   
+4569   4        1690       X'XXF           12         3794         SAM_mtases      -0.000853   
+4644   4        3326       H               12         2302         HotDog          0.000840    
+4648   4        2311       X'XM            12         2797         Aldolase        -0.000839   
+4655   4        237        FX'             12         3536         SAM_mtases      0.000838    
+4822   4        2311       X'XM            20         3615         AB_Hydrolase_fold-0.000811   
+5002   4        1682       PXXXXXX'        12         3536         SAM_mtases      -0.000777   
+5019   8        488        AB_Hydrolase_fold12         2797         Aldolase        -0.000773   
+5049   4        1690       X'XXF           8          2166         DHFR            0.000766    
+
+Found 63 interpretable edges in the top 20%
+
+Feature pair summary:
+AB_Hydrolase_fold → AB_Hydrolase_fold: 1 edge
+AB_Hydrolase_fold → Aldolase: 1 edge
+FAD/NAD → AB_Hydrolase_fold: 1 edge
+FAD/NAD → Aldolase: 1 edge
+FAD/NAD → SAM_mtases: 1 edge
+FX' → AB_Hydrolase_fold: 4 edges
+FX' → Aldolase: 1 edge
+FX' → DHFR: 1 edge
+FX' → FAM: 1 edge
+FX' → SAM_mtases: 1 edge
+FX' → Transketolase: 1 edge
+G → AB_Hydrolase_fold: 2 edges
+G → FAD/NAD: 1 edge
+G → FAM: 1 edge
+G → Transketolase: 1 edge
+H → AB_Hydrolase_fold: 3 edges
+H → Aldolase: 1 edge
+H → FAD/NAD: 1 edge
+H → FAM: 1 edge
+H → HotDog: 1 edge
+H → Kinase: 1 edge
+H → SAM_mtases: 2 edges
+H → WD40: 1 edge
+PXXXXXX' → AB_Hydrolase_fold: 1 edge
+PXXXXXX' → Aldolase: 1 edge
+PXXXXXX' → FAD/NAD: 1 edge
+PXXXXXX' → FAM: 1 edge
+PXXXXXX' → SAM_mtases: 1 edge
+Transketolase → AB_Hydrolase_fold: 1 edge
+Transketolase → Aldolase: 1 edge
+Transketolase → FAM: 1 edge
+Transketolase → SAM_mtases: 1 edge
+X'XI → AB_Hydrolase_fold: 1 edge
+X'XI → Aldolase: 1 edge
+X'XI → FAD/NAD: 1 edge
+X'XI → FAM: 1 edge
+X'XM → AB_Hydrolase_fold: 2 edges
+X'XM → Aldolase: 1 edge
+X'XM → FAD/NAD: 1 edge
+X'XXF → AB_Hydrolase_fold: 2 edges
+X'XXF → Aldolase: 1 edge
+X'XXF → DHFR: 1 edge
+X'XXF → FAM: 1 edge
+X'XXF → SAM_mtases: 2 edges
+X'XXF → WD40: 1 edge
+X'XXXG → AB_Hydrolase_fold: 3 edges
+X'XXXG → Aldolase: 1 edge
+X'XXXG → FAD/NAD: 1 edge
+X'XXXG → FAM: 1 edge
+X'XXXG → SAM_mtases: 1 edge
+X'XXXG → Transketolase: 1 edge
