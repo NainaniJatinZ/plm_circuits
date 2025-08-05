@@ -58,7 +58,7 @@ sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
 fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
 
 # Choose protein for analysis
-protein = "2B61A"
+protein = "1PVGA"
 seq = seq_dict[protein]
 position = sse_dict[protein][0]
 
@@ -364,7 +364,7 @@ for neuron1 in l4:
 
 # %%
 
-L, S = 379, 4096 #all_effects_sae_ALS[layer_2_saelayer[4]].shape
+L, S = all_effects_sae_ALS[layer_2_saelayer[4]].shape
 
 
 # %%
@@ -465,7 +465,7 @@ print(f"Layer {down_layer}, corr score: {path_corrupted_score:.4f}, change: {pat
 # %%
 
 # load the json file 
-with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_metx.json', 'r') as f:
+with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_top2.json', 'r') as f:
     layer_latent_dict_metx = json.load(f)
 
 for layer in layer_latent_dict_metx:
@@ -658,7 +658,10 @@ def compute_all_path_patching_effects(layer_latent_dict, saes, layer_2_saelayer,
 # %%
 
 # Load the JSON file with layer-latent combinations
-with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_metx.json', 'r') as f:
+# with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_metx.json', 'r') as f:
+#     layer_latent_dict_metx = json.load(f)
+
+with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_top2.json', 'r') as f:
     layer_latent_dict_metx = json.load(f)
 
 print("Layer-latent combinations loaded:")
@@ -673,8 +676,14 @@ print(f"\nBaseline score: {baseline_score:.4f}")
 
 # %%
 
+[sorted(layer_latent_dict_metx.keys(), key=int)[i] for i in [0, 2, 3]]
+
+# %%
+
 # Filter the dictionary to only keep the first three layers and deduplicate latents
-filtered_layers = sorted(layer_latent_dict_metx.keys(), key=int)[:3]
+n_layers = {"2B61A": [0, 1, 2], "1PVGA": [0, 2, 3]}
+
+filtered_layers = [sorted(layer_latent_dict_metx.keys(), key=int)[i] for i in n_layers[protein]]
 layer_latent_dict = {}
 
 print("\nFiltered and deduplicated layer-latent combinations:")
@@ -763,10 +772,10 @@ results_data = {
 import os
 os.makedirs('../results', exist_ok=True)
 
-with open('../results/path_patching_results_metx_top3layers.json', 'w') as f:
+with open(f'../results/path_patching_results_{protein}_top3layers.json', 'w') as f:
     json.dump(results_data, f, indent=2)
 
-print(f"\nResults saved to ../results/path_patching_results_metx_top3layers.json")
+print(f"\nResults saved to ../results/path_patching_results_{protein}_top3layers.json")
 print(f"Total edges in results: {len(path_patching_results)}")
 
 # %%
@@ -1288,7 +1297,7 @@ print("\n" + "="*80)
 print("EDGE STRENGTH DISTRIBUTION ANALYSIS")
 print("="*80)
 
-abs_strengths, ranks = plot_edge_strength_distribution(path_patching_results, top_n=None, show_elbow=True)
+abs_strengths, ranks = plot_edge_strength_distribution(path_patching_results, top_n=None, show_elbow=False)
 
 # %%
 
@@ -1435,12 +1444,29 @@ feature_clusters = {
     # # Layer 12 clusters
     12:  {2112: "AB_Hydrolase_fold", 3536:"SAM_mtases", 1256: "FAM", 2797: "Aldolase", 3794: "SAM_mtases", 3035: "WD40"},
 }
+
+feature_clusters_1pvg = {
+    4: {
+        1509:"E", 2511:"X'XQ", 2112:"YXX'", 3069: "GX'", 3544: "C", 2929: "N", 3170: "X'N", 3717:"V", 527: "DX'", 3229: "IXX'", 1297: "I", 1468: "X'XXN", 1196: "D"
+    },
+    8: {
+        1916: "NX'XXNA",
+        2529:"Hatpase_C", 3159: "Hatpase_C", 3903: "Hatpase_C", 1055: "Hatpase_C", 2066: "Hatpase_C"
+    },
+    12: {
+        3943: "Hatpase_C", 1796: "Hatpase_C", 1204: "Hatpase_C", 1145:  "Hatpase_C",
+        1082: "XPG-I", 2472: "Kinesin"
+    },
+    16: {
+        3077: "Hatpase_C", 1353: "Hatpase_C", 1597: "Hatpase_C", 1814: "Hatpase_C", 3994: "Ribosomal", 1166: "Hatpase_C"
+    }
+}
 # Analyze the top 10% edges and find interpretable ones
 print("\n" + "="*80)
 print("TOP 10% EDGE ANALYSIS WITH INTERPRETABLE FEATURES")
 print("="*80)
 
-interpretable_edges = analyze_interpretable_edges(path_patching_results, feature_clusters, top_percent=20)
+interpretable_edges = analyze_interpretable_edges(path_patching_results, feature_clusters_1pvg, top_percent=23)
 print_interpretable_edges(interpretable_edges)
 
 

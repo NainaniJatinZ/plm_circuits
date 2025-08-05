@@ -136,6 +136,7 @@ def view_single_protein(
     uniprot_id: str | None = None,
     values_to_color: list | None = None,
     colormap_fn = rwb_colormap_fn,
+    opacity_fn = None,
     default_color: str = "white",
     residues_to_highlight: list | None = None,
     highlight_color: str = "magenta",
@@ -143,7 +144,7 @@ def view_single_protein(
 ) -> py3Dmol.view:
     """
     Loads a protein structure (from RCSB or AlphaFold), colors residues using a colormap,
-    and returns a py3Dmol viewer.
+    and returns a py3Dmol viewer with PyMOL-style settings.
     
     Args:
         pdb_id: PDB identifier (if using RCSB).
@@ -151,6 +152,7 @@ def view_single_protein(
         uniprot_id: UniProt ID (if using AlphaFold).
         values_to_color: List of numeric values to color each residue.
         colormap_fn: Function to map a value to a color string.
+        opacity_fn: Function to map a value to opacity (0-1). If None, uses 1.0.
         default_color: Base color for the structure.
         residues_to_highlight: List of residue indices (0-indexed) to highlight.
         highlight_color: Color for highlighted residues.
@@ -186,6 +188,9 @@ def view_single_protein(
 
     view = py3Dmol.view(**pymol_params)
     view.addModel(pdb_text, "pdb")
+    
+    # Apply PyMOL-style settings for better appearance
+    view.setBackgroundColor("white")  # White background like PyMOL setting
     view.setStyle({}, {"cartoon": {"color": default_color}})
 
     act_min = min(values_to_color)
@@ -194,7 +199,9 @@ def view_single_protein(
     for i, (res, val) in enumerate(zip(residues, values_to_color)):
         res_id_in_pdb = res.id[1]  # residue id from PDB
         color_str = colormap_fn(val, act_min, act_max)
-        view.setStyle({"chain": chain_id, "resi": res_id_in_pdb}, {"cartoon": {"color": color_str, "opacity": 0.9}})
+        # Use opacity function if provided, otherwise default to 1.0
+        opacity = opacity_fn(val) if opacity_fn else 1.0
+        view.setStyle({"chain": chain_id, "resi": res_id_in_pdb}, {"cartoon": {"color": color_str, "opacity": opacity}})
         if residues_to_highlight and i in residues_to_highlight:
             view.addStyle({"chain": chain_id, "resi": res_id_in_pdb}, {"stick": {"color": highlight_color}})
             resname = res.get_resname()

@@ -74,6 +74,7 @@ with open('../data/full_seq_dict.json', "r") as json_file:
 # Define protein-specific parameters
 sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
 fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
+protein_name = {"2B61A": "METX_HAEIN", "1PVGA": "TOP2_YEAST"}
 
 # Choose protein for analysis
 protein = "2B61A" #"1PVGA" #"2B61A"
@@ -467,7 +468,7 @@ corrupted_recovery_cpu = corrupted_recovery.cpu().item() if isinstance(corrupted
 
 # %%
 # ---- load latent lists ---------------------------------------------------
-latent_json = '/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_metx.json'
+latent_json = '/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_top2.json'
 
 with open(latent_json, 'r') as f:
     layer_latent_dict_metx = json.load(f)           # keys are strings
@@ -483,7 +484,7 @@ plt.style.use('default')  # Clean matplotlib style
 fig, ax = plt.subplots(1, 1, figsize=(10, 7))
 
 # Define better colors using plasma colormap (depth → lightness)
-colors = plt.cm.plasma(np.linspace(0.1, 0.9, len(main_layers)))
+colors = plt.cm.plasma(np.linspace(0.1, 1, len(main_layers)))
 
 # Calculate target threshold
 target_threshold = target_recovery_percent * baseline_recovery_cpu
@@ -537,7 +538,7 @@ ax.set_ylim(y_min, y_max)
 
 # Grid and legend positioning (back inside plot)
 ax.grid(True, alpha=0.3, linestyle=':', linewidth=0.8)
-ax.legend(loc='lower right', fontsize=10, frameon=True, fancybox=True, 
+ax.legend(loc='lower right', fontsize=13, frameon=True, fancybox=True, 
          shadow=True, framealpha=0.9)
 
 # Tick styling
@@ -553,42 +554,48 @@ plt.savefig(f'performance_recovery_curves_{protein}.pdf', bbox_inches='tight')
 
 plt.show()
 
-# Print summary statistics
-print(f"\n{'='*60}")
-print(f"PERFORMANCE RECOVERY CURVE ANALYSIS - {protein}")
-print(f"{'='*60}")
-print(f"Baseline recovery: {baseline_recovery_cpu:.4f}")
-print(f"Target threshold ({target_recovery_percent*100:.0f}%): {target_threshold:.4f}")
-print(f"Corrupted recovery: {corrupted_recovery_cpu:.4f}")
+# # Print summary statistics
+# print(f"\n{'='*60}")
+# print(f"PERFORMANCE RECOVERY CURVE ANALYSIS - {protein}")
+# print(f"{'='*60}")
+# print(f"Baseline recovery: {baseline_recovery_cpu:.4f}")
+# print(f"Target threshold ({target_recovery_percent*100:.0f}%): {target_threshold:.4f}")
+# print(f"Corrupted recovery: {corrupted_recovery_cpu:.4f}")
 
-print(f"\nExact K values from loaded latent dictionary:")
-for i, layer in enumerate(main_layers):
-    k_exact = k_exact_list[i]
-    print(f"  Layer {layer}: {k_exact} features")
+# print(f"\nExact K values from loaded latent dictionary:")
+# for i, layer in enumerate(main_layers):
+#     k_exact = k_exact_list[i]
+#     print(f"  Layer {layer}: {k_exact} features")
 
-print(f"\nK values needed to reach {target_recovery_percent*100:.0f}% threshold (from curves):")
-for layer in main_layers:
-    # Find first k where we exceed threshold
-    curve = layer_recovery_curves[layer]
-    k_needed = None
-    for i, recovery in enumerate(curve):
-        if recovery >= target_threshold:
-            k_needed = k_values[i]
-            break
-    if k_needed is not None:
-        print(f"  Layer {layer}: {k_needed} features")
-    else:
-        print(f"  Layer {layer}: >{max_k} features (threshold not reached)")
+# print(f"\nK values needed to reach {target_recovery_percent*100:.0f}% threshold (from curves):")
+# for layer in main_layers:
+#     # Find first k where we exceed threshold
+#     curve = layer_recovery_curves[layer]
+#     k_needed = None
+#     for i, recovery in enumerate(curve):
+#         if recovery >= target_threshold:
+#             k_needed = k_values[i]
+#             break
+#     if k_needed is not None:
+#         print(f"  Layer {layer}: {k_needed} features")
+#     else:
+#         print(f"  Layer {layer}: >{max_k} features (threshold not reached)")
 
 # %% more color blind friendly plot 
 
 # Create colorblind-friendly version with distinct styles
 plt.style.use('default')
-fig, ax = plt.subplots(1, 1, figsize=(10, 7))
+fig, ax = plt.subplots(1, 1, figsize=(11.5, 7))
 
 # Colorblind-friendly palette with high contrast
-colors_cb = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2']
-line_styles = ['-', '--', '-.', ':', '-', '--', '-.']
+colors_cb = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2'] 
+
+# ['#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB']
+
+#['#0072B2', '#E69F00', '#009E73', '#D55E00', '#56B4E9', '#CC79A7', '#F0E442']
+
+#['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2'] 
+line_styles = ['-']*7 #, '--', '-.', ':', '-', '--', '-.']
 markers = ['o', 's', '^', 'D', 'v', 'p', '*']
 
 # Plot recovery curves with distinct visual elements
@@ -609,17 +616,17 @@ for i, layer in enumerate(main_layers):
                   edgecolors='black', linewidth=3, marker=markers[i])
 
 # Enhanced horizontal lines
-ax.axhline(y=target_threshold, color='red', linestyle='--', linewidth=4, zorder=1,
+ax.axhline(y=target_threshold, color='#666666', linestyle='--', linewidth=4, zorder=1,
           label=f'{target_recovery_percent*100:.0f}% threshold ({target_threshold:.3f})', alpha=0.9)
 
 ax.axhline(y=baseline_recovery_cpu, color='black', linestyle='-.', linewidth=3, zorder=1,
           label=f'Baseline recovery ({baseline_recovery_cpu:.3f})', alpha=0.8)
 
 # Enhanced styling
-ax.set_xlabel('Number of Top-K Features', fontsize=14, fontweight='bold')
-ax.set_ylabel('Contact Recovery Score', fontsize=14, fontweight='bold')
-ax.set_title(f'Performance Recovery Curves by Layer (Colorblind-Friendly)\nProtein: {protein} (L={seq_len})', 
-            fontsize=16, fontweight='bold', pad=20)
+ax.set_xlabel('Number of Top-K Features', fontsize=15)#, fontweight='bold')
+ax.set_ylabel('Contact Recovery Score', fontsize=15)#, fontweight='bold')
+ax.set_title(f'Performance Recovery Curves by Layer\nProtein: {protein_name[protein]} (L={seq_len})', 
+            fontsize=18,  pad=15, y=0.9) #fontweight='bold',
 
 # Set axis limits
 ax.set_xlim(0, max(k_values))
@@ -629,77 +636,20 @@ ax.set_ylim(y_min, y_max)
 
 # Enhanced grid and legend
 ax.grid(True, alpha=0.4, linestyle=':', linewidth=1)
-ax.legend(loc='lower right', fontsize=9, frameon=True, fancybox=True, 
+ax.legend(loc='lower right', fontsize=15, frameon=True, fancybox=True, 
          shadow=True, framealpha=0.95, ncol=1)
 
 # Tick styling
 ax.tick_params(axis='both', which='major', labelsize=12)
 
-plt.tight_layout()
-plt.savefig(f'performance_recovery_curves_{protein}_colorblind.png', dpi=300, bbox_inches='tight')
-plt.savefig(f'performance_recovery_curves_{protein}_colorblind.pdf', bbox_inches='tight')
-plt.show()
-
-# Alternative version with direct line labeling (no legend)
-fig, ax = plt.subplots(1, 1, figsize=(10, 7))
-
-for i, layer in enumerate(main_layers):
-    y_curve = layer_recovery_curves[layer]
-    k_exact = k_exact_list[i]
-    
-    # Plot line
-    line = ax.plot(k_values, y_curve, 
-                  color=colors_cb[i], linewidth=3, linestyle=line_styles[i],
-                  alpha=0.9)[0]
-    
-    # Direct line labeling - place label at end of line
-    ax.annotate(f'L{layer}', 
-               xy=(k_values[-1], y_curve[-1]),
-               xytext=(5, 0), textcoords='offset points',
-               va='center', fontsize=11, fontweight='bold',
-               color=colors_cb[i])
-    
-    # Add exact K marker
-    if k_exact is not None and k_exact <= max(k_values):
-        ax.scatter(k_exact, target_threshold, 
-                  color=colors_cb[i], s=120, zorder=5, 
-                  edgecolors='black', linewidth=3, marker=markers[i])
-        # Label the exact k value
-        ax.annotate(f'k={k_exact}', 
-                   xy=(k_exact, target_threshold),
-                   xytext=(0, 15), textcoords='offset points',
-                   ha='center', fontsize=9, fontweight='bold',
-                   color=colors_cb[i],
-                   bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8))
-
-# Threshold lines with labels
-ax.axhline(y=target_threshold, color='red', linestyle='--', linewidth=4, zorder=1, alpha=0.9)
-ax.annotate(f'70% threshold', xy=(max_k*0.8, target_threshold), 
-           xytext=(0, 5), textcoords='offset points',
-           ha='center', fontsize=12, fontweight='bold', color='red')
-
-ax.axhline(y=baseline_recovery_cpu, color='black', linestyle='-.', linewidth=3, zorder=1, alpha=0.8)
-ax.annotate(f'Baseline', xy=(max_k*0.8, baseline_recovery_cpu), 
-           xytext=(0, -15), textcoords='offset points',
-           ha='center', fontsize=12, fontweight='bold', color='black')
-
-# Enhanced styling
-ax.set_xlabel('Number of Top-K Features', fontsize=14, fontweight='bold')
-ax.set_ylabel('Contact Recovery Score', fontsize=14, fontweight='bold')
-ax.set_title(f'Performance Recovery Curves by Layer (Direct Labels)\nProtein: {protein} (L={seq_len})', 
-            fontsize=16, fontweight='bold', pad=20)
-
-ax.set_xlim(0, max(k_values))
-ax.set_ylim(y_min, y_max)
-ax.grid(True, alpha=0.4, linestyle=':', linewidth=1)
-ax.tick_params(axis='both', which='major', labelsize=12)
+# Remove top and right spines for subfigure appearance
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
 
 plt.tight_layout()
-plt.savefig(f'performance_recovery_curves_{protein}_labeled.png', dpi=300, bbox_inches='tight')
-plt.savefig(f'performance_recovery_curves_{protein}_labeled.pdf', bbox_inches='tight')
+plt.savefig(f'performance_recovery_curves_{protein_name[protein]}_colorblind.png', dpi=300, bbox_inches='tight')
+plt.savefig(f'performance_recovery_curves_{protein_name[protein]}_colorblind.pdf', bbox_inches='tight')
 plt.show()
-
-
 
 
 
@@ -840,7 +790,7 @@ print("Computing global performance recovery curves...")
 
 modes = ["abs", "pos", "neg"]
 mode2label = {"abs": "Absolute", "pos": "Positive", "neg": "Negative"}
-k_values_global = list(range(1, 5001, 250))  # Start from 1 to 5000 by 250s
+k_values_global = list(range(1, 5001, 200))  # Start from 1 to 5000 by 250s
 
 plt.figure(figsize=(10, 6))
 
@@ -997,7 +947,7 @@ def compute_recovery_for_flank_length(flank_length: int) -> float:
     return recovery
 
 # Test flank lengths from 0 to 50
-flank_lengths = list(range(0, 51, 1))  # Every single value from 0 to 50
+flank_lengths = list(range(0, 81, 1))  # Every single value from 0 to 50
 recoveries = []
 
 print(f"Testing flank lengths from 0 to 50 for protein {protein}...")
@@ -1009,7 +959,7 @@ for fl in flank_lengths:
 # %%
 # Create clean publication-quality plot
 plt.style.use('default')
-fig, ax = plt.subplots(1, 1, figsize=(11, 7))
+fig, ax = plt.subplots(1, 1, figsize=(5.5, 7))
 
 # Plot the recovery curve
 ax.plot(flank_lengths, recoveries, 
@@ -1028,35 +978,37 @@ max_increase_idx = np.argmax(recovery_diffs)
 # Get points before and after the kick-in
 before_kickin_flank = flank_lengths[max_increase_idx]
 before_kickin_recovery = recoveries[max_increase_idx]
-after_kickin_flank = flank_lengths[max_increase_idx + 1] 
-after_kickin_recovery = recoveries[max_increase_idx + 1]
+after_kickin_flank = flank_lengths[max_increase_idx + 2] 
+after_kickin_recovery = recoveries[max_increase_idx + 2]
 
 # Add annotation for recovery before kick-in
 ax.annotate(f'Before: {before_kickin_recovery:.3f}', 
            xy=(before_kickin_flank, before_kickin_recovery),
-           xytext=(before_kickin_flank - 20, before_kickin_recovery + 0.15),
+           xytext=(before_kickin_flank - 30, before_kickin_recovery + 0.15),
            arrowprops=dict(arrowstyle='->', color='#d62728', lw=2),
-           fontsize=18, fontweight='bold', color='#d62728')
+           fontsize=22, color='#d62728')#, fontweight='bold')
 
 # Add annotation for "Recovery kicks in" 
 ax.annotate(f'After: {after_kickin_recovery:.3f}', # 'Recovery kicks in'
            xy=(after_kickin_flank, after_kickin_recovery),
-           xytext=(after_kickin_flank - 20, after_kickin_recovery - 0.15),
+           xytext=(after_kickin_flank - 30, after_kickin_recovery - 0.15),
            arrowprops=dict(arrowstyle='->', color='#17becf', lw=2),
-           fontsize=18, fontweight='bold', color='#17becf')
+           fontsize=22, color='#17becf')#, fontweight='bold')
 
 # Styling
-ax.set_xlabel('Flank Length', fontsize=14, fontweight='bold')
-ax.set_ylabel('Contact Recovery Score', fontsize=14, fontweight='bold')
-ax.set_title(f'Contact Recovery vs Flank Length\nProtein: {protein} (L={len(seq)})', 
-            fontsize=16, fontweight='bold', pad=20)
+ax.set_xlabel('Flank Length', fontsize=14)#, fontweight='bold')
+ax.set_ylabel('Contact Recovery Score', fontsize=14)#, fontweight='bold')
+ax.set_title(f'Contact Recovery vs Flank Length\nProtein: {protein_name[protein]} (L={len(seq)})', 
+            fontsize=16,  pad=10, y=0.95)#, fontweight='bold')
 
 # Set axis limits
-ax.set_xlim(0, 50)
+ax.set_xlim(20, 70)
 y_min = min(recoveries) - 0.05
 y_max = max(max(recoveries), baseline_recovery_value) + 0.05
 ax.set_ylim(y_min, y_max)
-
+# Remove top and right spines for subfigure appearance
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
 # Grid and styling
 ax.grid(True, alpha=0.3, linestyle=':', linewidth=0.8)
 # ax.legend(fontsize=12, frameon=True, fancybox=True, shadow=True, framealpha=0.9)
@@ -1069,6 +1021,7 @@ plt.savefig(f'flank_length_recovery_{protein}.png', dpi=300, bbox_inches='tight'
 plt.savefig(f'flank_length_recovery_{protein}.pdf', bbox_inches='tight')
 plt.show()
 
+# %%
 # # Print summary statistics
 # print(f"\n{'='*60}")
 # print(f"FLANK LENGTH vs RECOVERY ANALYSIS - {protein}")
