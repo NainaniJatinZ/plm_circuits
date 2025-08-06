@@ -299,3 +299,170 @@ def vizualize_latent_on_protein(
         print(f"Plot saved to {save_path}")
     else:
         plt.show()
+
+##############################################################################
+# Domain-specific visualization functions
+##############################################################################
+
+def view_protein_domain(
+    pdb_id: str,
+    chain_id: str = "A",
+    domain_start: int = None,
+    domain_end: int = None,
+    catalytic_residues: list = None,
+    domain_name: str = "Protein Domain",
+    colormap_fn = None,
+    pymol_params: dict = None,
+) -> py3Dmol.view:
+    """
+    Visualize a specific protein domain with optional catalytic site highlighting.
+    
+    Args:
+        pdb_id: PDB identifier.
+        chain_id: Chain identifier.
+        domain_start: Starting residue number for domain (if None, use full structure).
+        domain_end: Ending residue number for domain (if None, use full structure).
+        catalytic_residues: List of residue numbers to highlight as catalytic sites.
+        domain_name: Name of the domain for display.
+        colormap_fn: Custom colormap function.
+        pymol_params: Dict of parameters for the viewer.
+    """
+    if pymol_params is None:
+        pymol_params = {"width": 800, "height": 600}
+    
+    # Load structure
+    structure = get_single_chain_pdb_structure(pdb_id, chain_id)
+    residues = list(structure.get_residues())
+    
+    # Filter to domain if specified
+    if domain_start is not None and domain_end is not None:
+        domain_residues = [res for res in residues 
+                          if domain_start <= res.id[1] <= domain_end]
+        print(f"Domain {domain_name}: residues {domain_start}-{domain_end} ({len(domain_residues)} residues)")
+    else:
+        domain_residues = residues
+        print(f"Full structure: {len(domain_residues)} residues")
+    
+    # Create activation pattern
+    n_res = len(residues)
+    values_to_color = [0.0] * n_res
+    
+    # Highlight domain region
+    if domain_start is not None and domain_end is not None:
+        for i, res in enumerate(residues):
+            res_num = res.id[1]
+            if domain_start <= res_num <= domain_end:
+                values_to_color[i] = 1.0
+            else:
+                values_to_color[i] = -0.5
+    
+    # Highlight catalytic residues
+    residues_to_highlight = []
+    if catalytic_residues:
+        for i, res in enumerate(residues):
+            res_num = res.id[1]
+            if res_num in catalytic_residues:
+                values_to_color[i] = 2.0
+                residues_to_highlight.append(i)
+        print(f"Highlighted catalytic residues: {catalytic_residues}")
+    
+    # Use default domain colormap if none provided
+    if colormap_fn is None:
+        def domain_colormap_fn(value: float, vmin: float, vmax: float) -> str:
+            if value > 1.5:
+                return "#FF0000"  # Red for catalytic
+            elif value > 0.5:
+                return "#4169E1"  # Blue for domain
+            elif value >= 0:
+                return "#F0F0F0"  # Light gray for background
+            else:
+                return "#FFA07A"  # Light salmon for outside domain
+        colormap_fn = domain_colormap_fn
+    
+    # Create visualization
+    view_obj = view_single_protein(
+        pdb_id=pdb_id,
+        chain_id=chain_id,
+        values_to_color=values_to_color,
+        colormap_fn=colormap_fn,
+        default_color="white",
+        residues_to_highlight=residues_to_highlight,
+        highlight_color="lime",
+        pymol_params=pymol_params
+    )
+    
+    return view_obj
+
+def get_alpha_beta_hydrolase_info():
+    """
+    Get information about well-characterized alpha/beta hydrolase structures.
+    
+    Returns:
+        dict: Dictionary containing PDB IDs and their structural information.
+    """
+    return {
+        "4EY4": {
+            "name": "Human Acetylcholinesterase",
+            "organism": "Homo sapiens",
+            "resolution": "2.16 Å",
+            "catalytic_triad": [200, 440, 327],  # Ser200, His440, Glu327
+            "domain_range": [20, 530],
+            "description": "Classic alpha/beta hydrolase fold with deep active site gorge",
+            "cath_classification": "3.40.50.1820"
+        },
+        "1EA5": {
+            "name": "Torpedo Acetylcholinesterase",
+            "organism": "Tetronarce californica", 
+            "resolution": "1.80 Å",
+            "catalytic_triad": [200, 440, 327],
+            "domain_range": [20, 530],
+            "description": "High-resolution alpha/beta hydrolase structure",
+            "cath_classification": "3.40.50.1820"
+        },
+        "3LII": {
+            "name": "Human Acetylcholinesterase (recombinant)",
+            "organism": "Homo sapiens",
+            "resolution": "3.20 Å", 
+            "catalytic_triad": [200, 440, 327],
+            "domain_range": [20, 530],
+            "description": "Recombinant human AChE with blocked active site",
+            "cath_classification": "3.40.50.1820"
+        }
+    }
+
+def visualize_alpha_beta_hydrolase(pdb_id: str = "4EY4", highlight_catalytic: bool = True):
+    """
+    Quick function to visualize alpha/beta hydrolase fold structures.
+    
+    Args:
+        pdb_id: PDB ID of the structure to visualize.
+        highlight_catalytic: Whether to highlight catalytic triad residues.
+        
+    Returns:
+        py3Dmol.view: The 3D viewer object.
+    """
+    ab_hydrolase_info = get_alpha_beta_hydrolase_info()
+    
+    if pdb_id.upper() not in ab_hydrolase_info:
+        raise ValueError(f"PDB ID {pdb_id} not in known alpha/beta hydrolase structures. "
+                        f"Available: {list(ab_hydrolase_info.keys())}")
+    
+    info = ab_hydrolase_info[pdb_id.upper()]
+    
+    print(f"Visualizing {info['name']} (PDB: {pdb_id.upper()})")
+    print(f"Resolution: {info['resolution']}")
+    print(f"Description: {info['description']}")
+    
+    catalytic_residues = info['catalytic_triad'] if highlight_catalytic else None
+    
+    view_obj = view_protein_domain(
+        pdb_id=pdb_id,
+        chain_id="A",
+        domain_start=info['domain_range'][0],
+        domain_end=info['domain_range'][1],
+        catalytic_residues=catalytic_residues,
+        domain_name="Alpha/Beta Hydrolase Domain",
+        pymol_params={"width": 900, "height": 650}
+    )
+    
+    return view_obj
