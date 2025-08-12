@@ -328,13 +328,13 @@ def find_k_for_recovery_threshold(target_layer: int, target_recovery_percent: fl
 
 # %%
 
-0.6 * baseline_recovery
+0.7 * baseline_recovery
 
 # %%
 # Find the number of latents needed for each layer to reach 60% of baseline performance
 # target_recovery_threshold = 0.65 * baseline_recovery
 # print(f"Target recovery threshold (60% of baseline): {target_recovery_threshold:.4f}")
-target_recovery_percent = 0.6
+target_recovery_percent = 0.7
 layer_circuit_sizes = {}
 layer_circuit_recoveries = {}
 
@@ -342,7 +342,7 @@ for layer in main_layers:
     k, recovery = find_k_for_recovery_threshold(
         layer, target_recovery_percent, all_effects_sae_ALS,
         clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
-        r0_percent=0.0 #if (layer != 8 and layer != 4) else 0.6
+        r0_percent=0.0 
     )
     layer_circuit_sizes[layer] = k
     layer_circuit_recoveries[layer] = recovery
@@ -557,7 +557,7 @@ for layer, clusters in feature_clusters_1pvg.items(): #feature_clusters.items():
 
 # %%
 # temp_layer_circuit_sizes = {4:29, 8:17, 12:18, 16:25}
-for layer in main_layers[:3]: #[:4]:
+for layer in main_layers[:4]: #[:4]:
     latents = get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)
     latents = [latent for token_idx, latent in latents]
     # print(f"Layer {layer} latents: {latents}")
@@ -762,7 +762,7 @@ print("Starting feature cluster analysis...")
 # added_layer_circuit_sizes = {layer: layer_circuit_sizes[layer] + 8 for layer in main_layers}
 # added_layer_circuit_sizes = temp_layer_circuit_sizes#{4:29, 8:17, 12:18, 16:25}
 cluster_analysis_results = analyze_all_feature_clusters(
-    feature_clusters, layer_circuit_sizes, all_effects_sae_ALS,
+    feature_clusters_1pvg, layer_circuit_sizes, all_effects_sae_ALS,
     clean_layer_caches, corr_layer_caches, clean_layer_errors
 )
 
@@ -902,10 +902,10 @@ results_to_save = {
     'main_layers': main_layers
 }
 
-with open('../results/feature_cluster_analysis_metx.pkl', 'wb') as f:
+with open('../results/feature_cluster_analysis_top2_1pvg.pkl', 'wb') as f:
     pickle.dump(results_to_save, f)
 
-print("Results saved to '../results/feature_cluster_analysis_metx.pkl'")
+print("Results saved to '../results/feature_cluster_analysis_top2_1pvg.pkl'")
 print("\nAnalysis complete!")
 
 
