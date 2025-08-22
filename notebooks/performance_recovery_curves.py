@@ -1,5 +1,4 @@
 # %%
-
 """
 Steps: 
 1. load the model and saes 
@@ -7,37 +6,48 @@ Steps:
 3. define protein-specific parameters
 4. prepare sequences and get baseline contact predictions
 5. compute causal effects for all layers
-6. find the number of latents needed for each layer to reach 60% of baseline performance
-7. iterate on nice looking plots 
+6. find the number of latents needed for each layer to reach 70% of baseline performance
+7. iterate on plots 
+
+Generates figures for 
+1. Layer-wise performance recovery curves
+2. Global performance recovery curves
+3. Distribution of SAE vs Error nodes for 70% performance target
+4. Flank length vs recovery
 """
 
 # %%
 # Import necessary libraries and functions from helper modules
 import sys
+sys.path.append('../')
 sys.path.append('../plm_circuits')
-
 # Import utility functions
-from helpers.utils import (
+from plm_circuits.helpers.utils import (
     clear_memory,
     load_esm,
     load_sae_prot,
     mask_flanks_segment,
     patching_metric,
-    cleanup_cuda
+    cleanup_cuda,
+    set_seed
 )
 
 # Import attribution functions
-from attribution import (
+from plm_circuits.attribution import (
     integrated_gradients_sae,
     topk_sae_err_pt
 )
 
 # Import hook classes
-from hook_manager import SAEHookProt
+from plm_circuits.hook_manager import SAEHookProt
+
+# data
+from data.protein_params import sse_dict, fl_dict, protein_name, protein2pdb
 
 # Additional imports
 import json
 from functools import partial
+import os
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
@@ -66,20 +76,23 @@ layer_2_saelayer = {layer: layer_idx for layer_idx, layer in enumerate(main_laye
 
 print(f"Loaded SAEs for layers: {main_layers}")
 
-# %%
 # Load sequence data and define protein parameters
 with open('../data/full_seq_dict.json', "r") as json_file:
     seq_dict = json.load(json_file)
 
-# Define protein-specific parameters
-sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
-fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
-protein_name = {"2B61A": "METXA_HAEIN", "1PVGA": "TOP2_YEAST"}
-
 # Choose protein for analysis
-protein = "2B61A" #"1PVGA" #"2B61A"
-seq = seq_dict[protein]
-position = sse_dict[protein][0]
+set_seed(0)
+
+# %% SET PROTEIN TO INVESTIGATE
+protein = "Top2" # "MetXA" or "Top2"
+
+# pdb reference 
+pdb_id = protein2pdb[protein]
+seq = seq_dict[pdb_id]
+position = sse_dict[pdb_id][0]
+
+print(f"Analyzing protein: {protein} {pdb_id}")
+print(f"Sequence length: {len(seq)}")
 
 # Define segment boundaries
 ss1_start = position[0] - 5 
@@ -87,10 +100,13 @@ ss1_end = position[0] + 5 + 1
 ss2_start = position[1] - 5 
 ss2_end = position[1] + 5 + 1 
 
-print(f"Analyzing protein: {protein}")
-print(f"Sequence length: {len(seq)}")
-print(f"Segment 1: {ss1_start}-{ss1_end}")
-print(f"Segment 2: {ss2_start}-{ss2_end}")
+print(f"Secondary structure element 1: {ss1_start}-{ss1_end}")
+print(f"Secondary structure element 1: {ss2_start}-{ss2_end}")
+print(f"Clean/optimal Flanking distance: {fl_dict[pdb_id][0]}")
+print(f"Corrupted Flanking distance: {fl_dict[pdb_id][1]}")
+
+RESULTS_DIR = '../results'
+os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # %%
 # Prepare sequences and get baseline contact predictions
@@ -103,7 +119,7 @@ with torch.no_grad():
     full_seq_contact_LL = esm_transformer.predict_contacts(batch_tokens_BL, batch_mask_BL)[0]
 
 # Prepare clean sequence (with optimal flanks)
-clean_fl = fl_dict[protein][0]
+clean_fl = fl_dict[pdb_id][0]
 L = len(seq)
 left_start = max(0, ss1_start - clean_fl)
 left_end = ss1_start
@@ -121,7 +137,7 @@ with torch.no_grad():
     clean_seq_contact_LL = esm_transformer.predict_contacts(clean_batch_tokens_BL, clean_batch_mask_BL)[0]
 
 # Prepare corrupted sequence (with suboptimal flanks)
-corr_fl = fl_dict[protein][1]
+corr_fl = fl_dict[pdb_id][1]
 left_start = max(0, ss1_start - corr_fl)
 left_end = ss1_start
 right_start = ss2_end
@@ -351,6 +367,63 @@ for layer in main_layers:
     print(f"Layer {layer}: {layer_circuit_sizes[layer]} features (recovery: {layer_circuit_recoveries[layer]:.4f})")
 
 # %%
+
+def get_top_k_feature_indices(layer: int, k: int, all_effects_sae_ALS: torch.Tensor) -> List[Tuple[int, int]]:
+    """
+    Get the top-k most important (token, latent) pairs for a given layer.
+    
+    Args:
+        layer: Target layer
+        k: Number of top features to get
+        all_effects_sae_ALS: Causal effects tensor
+    
+    Returns:
+        List of (token_idx, latent_idx) tuples
+    """
+    target_effect_sae_LS = all_effects_sae_ALS[layer_2_saelayer[layer]]
+    target_effect_sae_flat_LxS = target_effect_sae_LS.reshape(-1)
+    
+    # Get top-k indices (largest=False for most negative effects)
+    top_rank_vals, top_idx = torch.topk(target_effect_sae_flat_LxS, k=k, largest=False, sorted=True)
+    
+    # Convert flattened indices back to 2D coordinates
+    L, S = target_effect_sae_LS.shape
+    row_indices = top_idx // S
+    col_indices = top_idx % S
+    
+    feature_indices = []
+    for i in range(len(top_idx)):
+        token_idx = row_indices[i].item()
+        latent_idx = col_indices[i].item()
+        feature_indices.append((token_idx, latent_idx))
+    
+    return feature_indices
+
+# %% create layer latent dict or load it from json file
+recompute_latent_dict = False # Set to True to force recomputation
+latent_dict_path = os.path.join(RESULTS_DIR, 'layer_latent_dicts', f'layer_latent_dict_{protein}_{target_recovery_percent:.2f}.json')
+
+if recompute_latent_dict or not os.path.exists(latent_dict_path):
+    # Compute layer latent dictionary
+    layer_latent_dict = {}
+    for layer in main_layers:
+        layer_latent_dict[layer] = [latent for _, latent in get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)]
+    
+    # Save to file
+    os.makedirs(os.path.join(RESULTS_DIR, 'layer_latent_dicts'), exist_ok=True)
+    with open(latent_dict_path, 'w') as f:
+        json.dump(layer_latent_dict, f)
+    
+    # load again to get the keys to be strings
+    with open(latent_dict_path, 'r') as f:
+        layer_latent_dict = json.load(f)
+else:
+    # Load existing dictionary
+    with open(latent_dict_path, 'r') as f:
+        layer_latent_dict = json.load(f)
+
+# %%
+
 # Create performance recovery curves for all layers
 def compute_recovery_curve(target_layer: int, k_values: List[int], 
                           all_effects_sae_ALS: torch.Tensor,
@@ -432,25 +505,13 @@ def compute_recovery_curve(target_layer: int, k_values: List[int],
     
     return recoveries
 
-
-# %%
-
-"""
-- change k list to be every 10 values
-- remove dots from line chart
-- use linear scale for x axis
-- fix the problem of it starting with some padding ???
-"""
-
-
 # %%
 # Configure k values for testing
 max_k = 200  # Maximum number of features to test
+step_size = 5
+# Create k values list with every step_size values
+k_values = list(range(0, max_k + 1, step_size))  
 
-# Create k values list with every 10 values
-k_values = list(range(0, max_k + 1, 5))  # Every 10 values: [0, 10, 20, 30, ..., 200]
-
-print(f"Testing k values: {k_values[:10]}...{k_values[-5:]} (total: {len(k_values)} points)")
 print("Computing performance recovery curves for all layers...")
 layer_recovery_curves = {}
 
@@ -466,122 +527,17 @@ for layer in main_layers:
 baseline_recovery_cpu = baseline_recovery.cpu().item() if isinstance(baseline_recovery, torch.Tensor) else baseline_recovery
 corrupted_recovery_cpu = corrupted_recovery.cpu().item() if isinstance(corrupted_recovery, torch.Tensor) else corrupted_recovery
 
-# %%
-# ---- load latent lists ---------------------------------------------------
-latent_json = '/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dict_top2.json'
-
-with open(latent_json, 'r') as f:
-    layer_latent_dict_metx = json.load(f)           # keys are strings
-
-print("Loaded latent dictionary keys:", list(layer_latent_dict_metx.keys()))
-print("Example - Layer 4 latent count:", len(layer_latent_dict_metx['4']) if '4' in layer_latent_dict_metx else 'Not found')
-
-
 #%%
 
-# Create publication-quality plot
-plt.style.use('default')  # Clean matplotlib style
-fig, ax = plt.subplots(1, 1, figsize=(10, 7))
+save_recovery_curves = True
 
-# Define better colors using plasma colormap (depth → lightness)
-colors = plt.cm.plasma(np.linspace(0.1, 1, len(main_layers)))
-
-# Calculate target threshold
+# Precompute shared variables for the colorblind-friendly plot and later sections
 target_threshold = target_recovery_percent * baseline_recovery_cpu
-
-# Prepare data using loaded latent dictionary
 k_exact_list = []
-
-# Plot recovery curves for each layer with exact K from loaded dictionary
-for i, layer in enumerate(main_layers):
-    y_curve = layer_recovery_curves[layer]
-    
-    # Get exact K from loaded dictionary
-    k_exact = len(layer_latent_dict_metx[str(layer)]) if str(layer) in layer_latent_dict_metx else None
+for layer in main_layers:
+    k_exact = len(layer_latent_dict[str(layer)]) if str(layer) in layer_latent_dict else None
     k_exact_list.append(k_exact)
-    
-    # Plot the curve
-    ax.plot(k_values, y_curve, 
-           color=colors[i], linewidth=2.5,
-           label=f'Layer {layer} (k={k_exact})', alpha=0.8)
-    
-    # Add exact K marker if within our k range and we have the data
-    if k_exact is not None and k_exact <= max(k_values):
-        # Find closest k_value to k_exact
-        # closest_k_idx = min(range(len(k_values)), key=lambda i: abs(k_values[i] - k_exact))
-        # ax.scatter(k_exact, y_curve[closest_k_idx], 
-        #           color=colors[i], s=70, zorder=3, 
-        #           edgecolors='white', linewidth=2, marker='o')
-        ax.scatter(k_exact, target_threshold, 
-                  color=colors[i], s=100, zorder=3, 
-                  edgecolors='white', linewidth=2, marker='o')
-
-# Add horizontal lines with improved styling
-ax.axhline(y=target_threshold, color='red', linestyle='--', linewidth=3, zorder=1,
-          label=f'{target_recovery_percent*100:.0f}% threshold ({target_threshold:.3f})', alpha=0.9)
-
-ax.axhline(y=baseline_recovery_cpu, color='black', linestyle='-.', linewidth=2, zorder=1,
-          label=f'Baseline recovery ({baseline_recovery_cpu:.3f})', alpha=0.8)
-
-# Styling for publication quality with protein length context
 seq_len = len(seq)
-ax.set_xlabel('Number of Top-K Features', fontsize=14, fontweight='bold')
-ax.set_ylabel('Contact Recovery Score', fontsize=14, fontweight='bold')
-ax.set_title(f'Performance Recovery Curves by Layer\nProtein: {protein} (L={seq_len})', 
-            fontsize=16, fontweight='bold', pad=20)
-
-# Set reasonable axis limits
-ax.set_xlim(0, max(k_values))
-y_min = min([min(curve) for curve in layer_recovery_curves.values()] + [corrupted_recovery_cpu]) - 0.05
-y_max = max([max(curve) for curve in layer_recovery_curves.values()] + [baseline_recovery_cpu]) + 0.05
-ax.set_ylim(y_min, y_max)
-
-# Grid and legend positioning (back inside plot)
-ax.grid(True, alpha=0.3, linestyle=':', linewidth=0.8)
-ax.legend(loc='lower right', fontsize=13, frameon=True, fancybox=True, 
-         shadow=True, framealpha=0.9)
-
-# Tick styling
-ax.tick_params(axis='both', which='major', labelsize=12)
-ax.tick_params(axis='both', which='minor', labelsize=10)
-
-# Make it tight
-plt.tight_layout()
-
-# Save high-quality version for paper
-plt.savefig(f'performance_recovery_curves_{protein}.png', dpi=300, bbox_inches='tight')
-plt.savefig(f'performance_recovery_curves_{protein}.pdf', bbox_inches='tight')
-
-plt.show()
-
-# # Print summary statistics
-# print(f"\n{'='*60}")
-# print(f"PERFORMANCE RECOVERY CURVE ANALYSIS - {protein}")
-# print(f"{'='*60}")
-# print(f"Baseline recovery: {baseline_recovery_cpu:.4f}")
-# print(f"Target threshold ({target_recovery_percent*100:.0f}%): {target_threshold:.4f}")
-# print(f"Corrupted recovery: {corrupted_recovery_cpu:.4f}")
-
-# print(f"\nExact K values from loaded latent dictionary:")
-# for i, layer in enumerate(main_layers):
-#     k_exact = k_exact_list[i]
-#     print(f"  Layer {layer}: {k_exact} features")
-
-# print(f"\nK values needed to reach {target_recovery_percent*100:.0f}% threshold (from curves):")
-# for layer in main_layers:
-#     # Find first k where we exceed threshold
-#     curve = layer_recovery_curves[layer]
-#     k_needed = None
-#     for i, recovery in enumerate(curve):
-#         if recovery >= target_threshold:
-#             k_needed = k_values[i]
-#             break
-#     if k_needed is not None:
-#         print(f"  Layer {layer}: {k_needed} features")
-#     else:
-#         print(f"  Layer {layer}: >{max_k} features (threshold not reached)")
-
-# %% more color blind friendly plot 
 
 # Create colorblind-friendly version with distinct styles
 plt.style.use('default')
@@ -590,12 +546,7 @@ fig, ax = plt.subplots(1, 1, figsize=(11.5, 7))
 # Colorblind-friendly palette with high contrast
 colors_cb = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2'] 
 
-# ['#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377', '#BBBBBB']
-
-#['#0072B2', '#E69F00', '#009E73', '#D55E00', '#56B4E9', '#CC79A7', '#F0E442']
-
-#['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2'] 
-line_styles = ['-']*7 #, '--', '-.', ':', '-', '--', '-.']
+line_styles = ['-']*7 
 markers = ['o', 's', '^', 'D', 'v', 'p', '*']
 
 # Plot recovery curves with distinct visual elements
@@ -625,7 +576,7 @@ ax.axhline(y=baseline_recovery_cpu, color='black', linestyle='-.', linewidth=3, 
 # Enhanced styling
 ax.set_xlabel('Number of Top-K Features', fontsize=15)#, fontweight='bold')
 ax.set_ylabel('Contact Recovery Score', fontsize=15)#, fontweight='bold')
-ax.set_title(f'Performance Recovery Curves by Layer\nProtein: {protein_name[protein]} (L={seq_len})', 
+ax.set_title(f'Performance Recovery Curves by Layer\nProtein: {protein} (L={seq_len})', 
             fontsize=18,  pad=15, y=0.9) #fontweight='bold',
 
 # Set axis limits
@@ -647,19 +598,13 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 
 plt.tight_layout()
-plt.savefig(f'performance_recovery_curves_{protein_name[protein]}_colorblind.png', dpi=300, bbox_inches='tight')
-plt.savefig(f'performance_recovery_curves_{protein_name[protein]}_colorblind.pdf', bbox_inches='tight')
+if save_recovery_curves:
+    os.makedirs(os.path.join(RESULTS_DIR, 'performance_recovery_curves'), exist_ok=True)
+    plt.savefig(os.path.join(RESULTS_DIR, 'performance_recovery_curves', f'performance_recovery_curves_{protein}_{target_recovery_percent:.2f}.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(RESULTS_DIR, 'performance_recovery_curves', f'performance_recovery_curves_{protein}_{target_recovery_percent:.2f}.pdf'), bbox_inches='tight')
 plt.show()
 
-
-
-
-# %%
-
 # %% GLOBAL PERFORMANCE RECOVERY CURVE and per layer distribution
-
-# Global analysis using real SAE and error effects from integrated gradients
-print(f"Using real effect data - SAE: {all_effects_sae_ALS.shape}, Error: {all_effects_err_ABLF.shape}")
 
 # Import functions needed for global analysis
 def topk_sae_err_pt(
@@ -785,8 +730,11 @@ def topk_performance_global(k, mode, target_recovery=None):
     
     return recovery.item(), topk_circuit
 
+# %%
+
+save_global_recovery_curves = True
+
 # Plot 1: Global Performance Recovery Curves (Negative vs Absolute vs Positive)
-print("Computing global performance recovery curves...")
 
 modes = ["abs", "pos", "neg"]
 mode2label = {"abs": "Absolute", "pos": "Positive", "neg": "Negative"}
@@ -800,7 +748,7 @@ for mode in modes:
     for k in k_values_global:
         recovery, _ = topk_performance_global(k, mode)
         recoveries.append(recovery)
-        print(f"  k={k}: recovery={recovery:.4f}")
+        # print(f"  k={k}: recovery={recovery:.4f}")
     
     plt.plot(k_values_global, recoveries, marker="o", linewidth=2.5, markersize=4,
             label=mode2label[mode], alpha=0.8)
@@ -809,7 +757,7 @@ for mode in modes:
 plt.axhline(baseline_recovery_cpu, linestyle="--", color="black", linewidth=2, 
            label=f"Baseline ({baseline_recovery_cpu:.3f})", alpha=0.8)
 plt.axhline(target_threshold, linestyle=":", color="red", linewidth=2,
-           label=f"70% target ({target_threshold:.3f})", alpha=0.8)
+           label=f"{target_recovery_percent*100:.0f}% target ({target_threshold:.3f})", alpha=0.8)
 
 plt.xlabel("k (Top-K Elements Preserved)", fontsize=14, fontweight='bold')
 plt.ylabel("Contact Recovery Score", fontsize=14, fontweight='bold')
@@ -819,14 +767,17 @@ plt.legend(fontsize=12)
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
 
-plt.savefig(f'global_performance_recovery_{protein}.png', dpi=300, bbox_inches='tight')
-plt.savefig(f'global_performance_recovery_{protein}.pdf', bbox_inches='tight')
+if save_global_recovery_curves:
+    os.makedirs(os.path.join(RESULTS_DIR, 'performance_recovery_curves'), exist_ok=True)
+    plt.savefig(os.path.join(RESULTS_DIR, 'performance_recovery_curves', f'global_performance_recovery_{protein}_{target_recovery_percent:.2f}.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(RESULTS_DIR, 'performance_recovery_curves', f'global_performance_recovery_{protein}_{target_recovery_percent:.2f}.pdf'), bbox_inches='tight')
 plt.show()
 
+# %%
 # Plot 2: Distribution of SAE vs Error nodes for 70% performance target
-print("\nAnalyzing component distribution for 70% target...")
+print(f"\nAnalyzing component distribution for {target_recovery_percent*100:.0f}% target...")
 
-# Find k value that hits 70% for negative mode (most effective)
+# Find k value that hits target_recovery_percent for negative mode (most effective)
 target_k = None
 for k in k_values_global:
     recovery, circuit = topk_performance_global(k, "neg")
@@ -878,15 +829,17 @@ if target_k is not None:
     ax.set_xticklabels([f'Layer {l}' for l in actual_layers])
     ax.set_xlabel('Transformer Layer', fontsize=14, fontweight='bold')
     ax.set_ylabel('Component Count', fontsize=14, fontweight='bold')
-    ax.set_title(f'Circuit Component Distribution for 70% Performance\n'
-                f'k={target_k} components, Recovery={target_recovery:.3f}', 
+    ax.set_title(f'Circuit Component Distribution for {target_recovery_percent*100:.0f}% Performance\n'
+                f'k={target_k} components, Recovery={target_recovery:.3f}, Protein: {protein}', 
                 fontsize=16, fontweight='bold', pad=20)
     ax.legend(fontsize=12)
     ax.grid(True, axis='y', alpha=0.3)
     
     plt.tight_layout()
-    plt.savefig(f'circuit_distribution_70pct_{protein}.png', dpi=300, bbox_inches='tight')
-    plt.savefig(f'circuit_distribution_70pct_{protein}.pdf', bbox_inches='tight')
+    if save_global_recovery_curves:
+        os.makedirs(os.path.join(RESULTS_DIR, 'performance_recovery_curves'), exist_ok=True)
+        plt.savefig(os.path.join(RESULTS_DIR, 'performance_recovery_curves', f'circuit_distribution_{target_recovery_percent:.2f}_{protein}.png'), dpi=300, bbox_inches='tight')
+        plt.savefig(os.path.join(RESULTS_DIR, 'performance_recovery_curves', f'circuit_distribution_{target_recovery_percent:.2f}_{protein}.pdf'), bbox_inches='tight')
     plt.show()
     
     # Print summary statistics
@@ -947,7 +900,7 @@ def compute_recovery_for_flank_length(flank_length: int) -> float:
     return recovery
 
 # Test flank lengths from 0 to 50
-flank_lengths = list(range(0, 81, 1))  # Every single value from 0 to 50
+flank_lengths = list(range(0, fl_dict[pdb_id][0] + 10, 1))  # Every single value from 0 to 50
 recoveries = []
 
 print(f"Testing flank lengths from 0 to 50 for protein {protein}...")
@@ -957,6 +910,7 @@ for fl in flank_lengths:
     if fl % 10 == 0 or fl in [1, 2, 5]:  # Print progress for key values
         print(f"  Flank length {fl}: recovery={recovery:.4f}")
 # %%
+save_flank_length_recovery = True
 # Create clean publication-quality plot
 plt.style.use('default')
 fig, ax = plt.subplots(1, 1, figsize=(5.5, 7))
@@ -978,31 +932,31 @@ max_increase_idx = np.argmax(recovery_diffs)
 # Get points before and after the kick-in
 before_kickin_flank = flank_lengths[max_increase_idx]
 before_kickin_recovery = recoveries[max_increase_idx]
-after_kickin_flank = flank_lengths[max_increase_idx + 2] 
-after_kickin_recovery = recoveries[max_increase_idx + 2]
+after_kickin_flank = flank_lengths[max_increase_idx + fl_dict[pdb_id][0] - fl_dict[pdb_id][1]] 
+after_kickin_recovery = recoveries[max_increase_idx + fl_dict[pdb_id][0] - fl_dict[pdb_id][1]]
 
 # Add annotation for recovery before kick-in
 ax.annotate(f'Before: {before_kickin_recovery:.3f}', 
            xy=(before_kickin_flank, before_kickin_recovery),
-           xytext=(before_kickin_flank - 30, before_kickin_recovery + 0.15),
+           xytext=(before_kickin_flank - 20, before_kickin_recovery + 0.15),
            arrowprops=dict(arrowstyle='->', color='#d62728', lw=2),
            fontsize=22, color='#d62728')#, fontweight='bold')
 
 # Add annotation for "Recovery kicks in" 
 ax.annotate(f'After: {after_kickin_recovery:.3f}', # 'Recovery kicks in'
            xy=(after_kickin_flank, after_kickin_recovery),
-           xytext=(after_kickin_flank - 30, after_kickin_recovery - 0.15),
+           xytext=(after_kickin_flank - 20, after_kickin_recovery - 0.15),
            arrowprops=dict(arrowstyle='->', color='#17becf', lw=2),
            fontsize=22, color='#17becf')#, fontweight='bold')
 
 # Styling
 ax.set_xlabel('Flank Length', fontsize=14)#, fontweight='bold')
 ax.set_ylabel('Contact Recovery Score', fontsize=14)#, fontweight='bold')
-ax.set_title(f'Contact Recovery vs Flank Length\nProtein: {protein_name[protein]} (L={len(seq)})', 
+ax.set_title(f'Contact Recovery vs Flank Length\nProtein: {protein} (L={seq_len})', 
             fontsize=16,  pad=10, y=0.95)#, fontweight='bold')
 
 # Set axis limits
-ax.set_xlim(20, 70)
+ax.set_xlim(20, fl_dict[pdb_id][1] + 10)
 y_min = min(recoveries) - 0.05
 y_max = max(max(recoveries), baseline_recovery_value) + 0.05
 ax.set_ylim(y_min, y_max)
@@ -1017,35 +971,10 @@ ax.tick_params(axis='both', which='major', labelsize=12)
 plt.tight_layout()
 
 # Save the plot
-plt.savefig(f'flank_length_recovery_{protein}.png', dpi=300, bbox_inches='tight')
-plt.savefig(f'flank_length_recovery_{protein}.pdf', bbox_inches='tight')
+if save_flank_length_recovery:
+    os.makedirs(os.path.join(RESULTS_DIR, 'flank_jump_showcase'), exist_ok=True)
+    plt.savefig(os.path.join(RESULTS_DIR, 'flank_jump_showcase', f'flank_length_recovery_{protein}.png'), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(RESULTS_DIR, 'flank_jump_showcase', f'flank_length_recovery_{protein}.pdf'), bbox_inches='tight')
 plt.show()
-
-# %%
-# # Print summary statistics
-# print(f"\n{'='*60}")
-# print(f"FLANK LENGTH vs RECOVERY ANALYSIS - {protein}")
-# print(f"{'='*60}")
-# print(f"Sequence length: {len(seq)}")
-# print(f"Baseline recovery (optimal flanks): {baseline_recovery_value:.4f}")
-# print(f"Recovery at flank length 0: {recoveries[0]:.4f}")
-# print(f"Recovery at flank length 50: {recoveries[-1]:.4f}")
-# print(f"Maximum recovery achieved: {max(recoveries):.4f} at flank length {flank_lengths[np.argmax(recoveries)]}")
-# print(f"Steepest increase at flank length: {before_kickin_flank} (increase: {recovery_diffs[max_increase_idx]:.4f})")
-# print(f"Recovery before kick-in: {before_kickin_recovery:.4f}")
-# print(f"Recovery after kick-in: {after_kickin_recovery:.4f}")
-
-# # Find optimal flank length (where we first reach 90% of baseline)
-# target_90pct = 0.9 * baseline_recovery_value
-# optimal_flank = None
-# for i, recovery in enumerate(recoveries):
-#     if recovery >= target_90pct:
-#         optimal_flank = flank_lengths[i]
-#         break
-
-# if optimal_flank is not None:
-#     print(f"Flank length for 90% baseline: {optimal_flank}")
-# else:
-#     print("90% baseline not reached within tested range")
 
 # %%
