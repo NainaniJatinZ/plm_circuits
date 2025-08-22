@@ -404,6 +404,7 @@ recompute_latent_dict = False # Set to True to force recomputation
 latent_dict_path = os.path.join(RESULTS_DIR, 'layer_latent_dicts', f'layer_latent_dict_{protein}_{target_recovery_percent:.2f}.json')
 
 if recompute_latent_dict or not os.path.exists(latent_dict_path):
+    print("Computing layer latent dictionary")
     # Compute layer latent dictionary
     layer_latent_dict = {}
     for layer in main_layers:
@@ -418,6 +419,7 @@ if recompute_latent_dict or not os.path.exists(latent_dict_path):
     with open(latent_dict_path, 'r') as f:
         layer_latent_dict = json.load(f)
 else:
+    print("Loading existing latent dict")
     # Load existing dictionary
     with open(latent_dict_path, 'r') as f:
         layer_latent_dict = json.load(f)

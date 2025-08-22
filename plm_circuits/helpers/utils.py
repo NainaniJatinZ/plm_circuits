@@ -11,6 +11,25 @@ from safetensors.torch import load_file
 from transformers import AutoTokenizer, EsmForMaskedLM
 from esm import FastaBatchedDataset, pretrained
 
+VERBOSE = False
+
+def set_verbose(flag: bool) -> None:
+    global VERBOSE
+    VERBOSE = bool(flag)
+
+
+def log(msg: str) -> None:
+    if VERBOSE:
+        print(msg)
+
+
+def set_seed(seed: int = 0) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
 def activate_autoreload():
     try:
         ipython = get_ipython()
