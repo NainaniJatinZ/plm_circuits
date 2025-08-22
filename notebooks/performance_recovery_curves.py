@@ -84,7 +84,7 @@ with open('../data/full_seq_dict.json', "r") as json_file:
 set_seed(0)
 
 # %% SET PROTEIN TO INVESTIGATE
-protein = "Top2" # "MetXA" or "Top2"
+protein = "MetXA" # "MetXA" or "Top2"
 
 # pdb reference 
 pdb_id = protein2pdb[protein]
