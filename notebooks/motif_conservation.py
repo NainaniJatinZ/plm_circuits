@@ -491,7 +491,12 @@ def find_top_k_activations_per_latent(cache_system, layer_latent_dict, layer_sub
     
     return results_per_latent
 
-with open('../data/layer_latent_dict_top2.json', 'r') as f:
+# %%
+
+protein = "MetXA" # "MetXA" or "Top2"
+target_recovery_percent = 0.7
+
+with open(f'../results/layer_latent_dicts/layer_latent_dict_{protein}_{target_recovery_percent}.json', 'r') as f:
     layer_latent_dict = json.load(f)
 print(layer_latent_dict)
 
@@ -501,7 +506,7 @@ top_activations = find_top_k_activations_per_latent(
     layer_latent_dict=layer_latent_dict,
     layer_subset=[4],  # Only process these layers
     k=100,
-    protein='top2'
+    protein=protein
 )
 
 # Convert namedtuples to dictionaries before saving
@@ -519,7 +524,7 @@ for act in top_activations:
     top_activations_dict.append(act_dict)
 
 # Now save the dictionaries
-with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_top2.pkl', 'wb') as f:
+with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_{protein}_{target_recovery_percent}.pkl', 'wb') as f:
     pickle.dump(top_activations_dict, f)
 
 # %%
@@ -530,7 +535,7 @@ import pickle
 ExtendedActivationInfo = namedtuple('ExtendedActivationInfo', 
         ['activation_value', 'protein_idx', 'token_idx', 'protein_id', 'residue_idx', 'layer_idx', 'latent_idx'])
 
-with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_top2.pkl', 'rb') as f:
+with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_{protein}_{target_recovery_percent}.pkl', 'rb') as f:
     top_activations = pickle.load(f)
 
 # %%
@@ -540,7 +545,7 @@ import pickle
 import os
 
 # Load the stored activations 
-stored_activations_path = '../intermediate_ops/top_activations_per_latent_k100_top2.pkl'
+stored_activations_path = f'../intermediate_ops/top_activations_per_latent_k100_{protein}_{target_recovery_percent}.pkl'
 
 if os.path.exists(stored_activations_path):
     with open(stored_activations_path, 'rb') as f:

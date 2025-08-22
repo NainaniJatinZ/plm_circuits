@@ -1,3 +1,5 @@
+"""Adams et al. https://github.com/etowahadams/interprot/tree/main
+"""
 import math
 from typing import Optional
 

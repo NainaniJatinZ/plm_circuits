@@ -1,3 +1,8 @@
+"""
+Part of this code is adapted from:
+Simons et al. https://github.com/ElanaPearl/interPLM
+"""
+
 import os
 import requests
 import tempfile
