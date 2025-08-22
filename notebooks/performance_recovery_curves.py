@@ -74,7 +74,7 @@ with open('../data/full_seq_dict.json', "r") as json_file:
 # Define protein-specific parameters
 sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
 fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
-protein_name = {"2B61A": "METX_HAEIN", "1PVGA": "TOP2_YEAST"}
+protein_name = {"2B61A": "METXA_HAEIN", "1PVGA": "TOP2_YEAST"}
 
 # Choose protein for analysis
 protein = "2B61A" #"1PVGA" #"2B61A"

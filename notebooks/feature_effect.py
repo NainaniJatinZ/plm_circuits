@@ -75,7 +75,7 @@ sse_dict = {"2B61A": [[182, 316]], "1PVGA": [[101, 202]]}
 fl_dict = {"2B61A": [44, 43], "1PVGA": [65, 63]}
 
 # Choose protein for analysis
-protein = "1PVGA" #"1PVGA" #"2B61A"
+protein = "2B61A" #"1PVGA" #"2B61A"
 seq = seq_dict[protein]
 position = sse_dict[protein][0]
 
@@ -352,6 +352,9 @@ for layer in main_layers:
     print(f"Layer {layer}: {layer_circuit_sizes[layer]} features (recovery: {layer_circuit_recoveries[layer]:.4f})")
 
 # %%
+
+
+# %%
 # layer = 4
 # for target_recovery_percent in [0.6, 0.65, 0.7, 0.75, 0.8]:
 #     k, recovery = find_k_for_recovery_threshold(
@@ -482,6 +485,20 @@ layer_circuit_sizes
 for layer in main_layers:
     print(f"Layer {layer}: {get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)}")
 
+# %%
+layer = 12
+k_feats = get_top_k_feature_indices(layer, layer_circuit_sizes[layer], all_effects_sae_ALS)
+for token_idx, latent_idx in k_feats:
+    act_change = round(float(clean_layer_caches[layer][token_idx, latent_idx] - corr_layer_caches[layer][token_idx, latent_idx]), 2)
+    print(f"Latent {latent_idx}, Residue {seq[token_idx-1]}{token_idx-1}, activation change {act_change}")
+
+# %%
+len(seq)
+
+
+# %%
+clean_layer_caches[4].shape
+
 # %% record the layer latent dict, only storing the latents, not the tokens
 layer_latent_dict = {}
 for layer in main_layers:
@@ -519,7 +536,7 @@ feature_clusters = {
     12: {
         "annotated_domain_detector": {2112: "AB_Hydrolase_fold"},
         "misc_domain_detector": {3536:"SAM_mtases", 1256: "FAM", 2797: "Aldolase", 3794: "SAM_mtases", 3035: "WD40"},
-        "motif_detectors": {2112: "AB_Hydrolase_fold", 3536:"SAM_mtases", 1256: "FAM", 2797: "Aldolase", 3794: "SAM_mtases", 3035: "WD40"},
+        "motif_detectors": {2112: "AB_Hydrolase_fold", 3536:"SAM_mtases", 1256: "FAM, Acyl-CoA N-acyltransferase", 2797: "Aldolase", 3794: "SAM_mtases", 3035: "WD40"},
     },
     # Add more layers and clusters as needed...
 }
