@@ -1,0 +1,161 @@
+{
+  "fasta_sprot": "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/uniprot_sprot.fasta",
+  "targets": [
+    [
+      8,
+      488,
+      "IPR029058",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR029058.fasta"
+    ],
+    [
+      8,
+      2677,
+      "IPR036188",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/data/protein-matching-IPR036188.fasta"
+    ],
+    [
+      8,
+      2775,
+      "IPR009014",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR009014.fasta"
+    ],
+    [
+      8,
+      2166,
+      "IPR024072",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR024072.fasta"
+    ],
+    [
+      12,
+      2112,
+      "IPR029058",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR029058.fasta"
+    ],
+    [
+      12,
+      3536,
+      "IPR029063",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR029063.fasta"
+    ],
+    [
+      12,
+      1256,
+      "IPR016181",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR016181.fasta"
+    ],
+    [
+      12,
+      2797,
+      "IPR013785",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR013785.fasta"
+    ],
+    [
+      12,
+      3794,
+      "IPR029063",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR029063.fasta"
+    ],
+    [
+      12,
+      3035,
+      "IPR036322",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036322.fasta"
+    ],
+    [
+      12,
+      1082,
+      "PF00867",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-PF00867.fasta"
+    ],
+    [
+      12,
+      2472,
+      "IPR036961",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036961.fasta"
+    ],
+    [
+      12,
+      3943,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      12,
+      1796,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      12,
+      1204,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      12,
+      1145,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      16,
+      1166,
+      "PF13589",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-PF13589.fasta"
+    ],
+    [
+      16,
+      3077,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      16,
+      1353,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      16,
+      1597,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      16,
+      1814,
+      "IPR036890",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-IPR036890.fasta"
+    ],
+    [
+      16,
+      3994,
+      "PF13589",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-PF13589.fasta"
+    ],
+    [
+      20,
+      2311,
+      "PF13589",
+      "/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_interp/data/paper/protein-matching-PF13589.fasta"
+    ]
+  ],
+  "aggregators": [
+    "max",
+    "topq",
+    "mean",
+    "topk"
+  ],
+  "params": {
+    "TOPQ": 0.01,
+    "LSE_TAU": 2.0,
+    "MAX_SEQ_LEN": 1022,
+    "NEG_MATCH_STRAT": "length",
+    "N_LENGTH_BINS": 12,
+    "SEED": 42,
+    "BOOT_N": 3000,
+    "ALTERNATIVE": "greater",
+    "MT_METHOD": "bh",
+    "ALPHA": 0.05
+  }
+}
