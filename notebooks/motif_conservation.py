@@ -494,16 +494,17 @@ def find_top_k_activations_per_latent(cache_system, layer_latent_dict, layer_sub
 # %%
 
 protein = "MetXA" # "MetXA" or "Top2"
-target_recovery_percent = 0.7
+target_recovery_percent = 0.70
 
-with open(f'../results/layer_latent_dicts/layer_latent_dict_{protein}_{target_recovery_percent}.json', 'r') as f:
+with open(f'../results/layer_latent_dicts/layer_latent_dict_{protein}_{target_recovery_percent:.2f}.json', 'r') as f:
     layer_latent_dict = json.load(f)
 print(layer_latent_dict)
 
 # %%
+tempo = {"4": [59, 117, 136, 430, 441, 830, 1024, 1052, 1072, 1273, 1297, 1395, 1505, 1533, 1744, 1763, 1794, 1799, 1800, 1931, 1960, 2222, 2322, 2324, 2473, 2495, 2721, 2967, 3044, 3431, 3616, 3639, 3677, 3728, 3732, 3775, 3924, 4058]}
 top_activations = find_top_k_activations_per_latent(
     cache_system=tmp, 
-    layer_latent_dict=layer_latent_dict,
+    layer_latent_dict=tempo, #layer_latent_dict,
     layer_subset=[4],  # Only process these layers
     k=100,
     protein=protein
@@ -524,7 +525,7 @@ for act in top_activations:
     top_activations_dict.append(act_dict)
 
 # Now save the dictionaries
-with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_{protein}_{target_recovery_percent}.pkl', 'wb') as f:
+with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_{protein}_{target_recovery_percent}_single_contact_global.pkl', 'wb') as f:
     pickle.dump(top_activations_dict, f)
 
 # %%
@@ -535,7 +536,7 @@ import pickle
 ExtendedActivationInfo = namedtuple('ExtendedActivationInfo', 
         ['activation_value', 'protein_idx', 'token_idx', 'protein_id', 'residue_idx', 'layer_idx', 'latent_idx'])
 
-with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_{protein}_{target_recovery_percent}.pkl', 'rb') as f:
+with open(f'../intermediate_ops/top_activations_layers_4_latentdict_top100_{protein}_{target_recovery_percent}_single_contact_global.pkl', 'rb') as f:
     top_activations = pickle.load(f)
 
 # %%
@@ -545,7 +546,7 @@ import pickle
 import os
 
 # Load the stored activations 
-stored_activations_path = f'../intermediate_ops/top_activations_per_latent_k100_{protein}_{target_recovery_percent}.pkl'
+stored_activations_path = f'../intermediate_ops/top_activations_per_latent_k100_{protein}.pkl'
 
 if os.path.exists(stored_activations_path):
     with open(stored_activations_path, 'rb') as f:
