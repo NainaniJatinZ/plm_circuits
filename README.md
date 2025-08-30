@@ -12,7 +12,7 @@ End-to-end workflow to discover, quantify, and validate mechanistic circuits in 
 This research builds on:
 1. Zhang et al. (`https://github.com/zzhangzzhang/pLMs-interpretability`) – task setup, sequence data, SSE positions
 2. Adams et al. (`https://github.com/etowahadams/interprot/tree/main`) – SAE inference code and weights
-3. Simons et al. (`https://github.com/ElanaPearl/interPLM`) – protein 3D and latent visualization
+3. Simon et al. (`https://github.com/ElanaPearl/interPLM`) – protein 3D and latent visualization
 
 ## Environment and prerequisites
 - Python 3.9+ with CUDA‑enabled GPU recommended
