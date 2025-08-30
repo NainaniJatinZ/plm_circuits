@@ -1,0 +1,260 @@
+{
+    "1BRTA": {
+        "clean_flank_length": 32,
+        "clean_recovery": 0.7367178797721863,
+        "corrupted_flank_length": 31,
+        "corrupted_recovery": 0.015240390785038471
+    },
+    "1IN4A": {
+        "clean_flank_length": 40,
+        "clean_recovery": 0.9656456112861633,
+        "corrupted_flank_length": 39,
+        "corrupted_recovery": 0.37359437346458435
+    },
+    "1MJ5A": {
+        "clean_flank_length": 35,
+        "clean_recovery": 0.8945256471633911,
+        "corrupted_flank_length": 34,
+        "corrupted_recovery": 0.007809212431311607
+    },
+    "1NOXA": {
+        "clean_flank_length": 25,
+        "clean_recovery": 0.6426883339881897,
+        "corrupted_flank_length": 24,
+        "corrupted_recovery": 0.013175529427826405
+    },
+    "1PVGA": {
+        "clean_flank_length": 64,
+        "clean_recovery": 0.5921511054039001,
+        "corrupted_flank_length": 63,
+        "corrupted_recovery": 0.06444325298070908
+    },
+    "1YKIA": {
+        "clean_flank_length": 51,
+        "clean_recovery": 0.7542047500610352,
+        "corrupted_flank_length": 50,
+        "corrupted_recovery": 0.1791408807039261
+    },
+    "2B61A": {
+        "clean_flank_length": 44,
+        "clean_recovery": 0.5737990140914917,
+        "corrupted_flank_length": 43,
+        "corrupted_recovery": 0.0278549212962389
+    },
+    "2DPMA": {
+        "clean_flank_length": 30,
+        "clean_recovery": 0.9394317865371704,
+        "corrupted_flank_length": 29,
+        "corrupted_recovery": 0.016853421926498413
+    },
+    "2EK8A": {
+        "clean_flank_length": 50,
+        "clean_recovery": 0.6519151329994202,
+        "corrupted_flank_length": 49,
+        "corrupted_recovery": 0.0234746765345335
+    },
+    "2FBQA": {
+        "clean_flank_length": 61,
+        "clean_recovery": 0.8185400366783142,
+        "corrupted_flank_length": 60,
+        "corrupted_recovery": 0.01297715213149786
+    },
+    "2HFSA": {
+        "clean_flank_length": 68,
+        "clean_recovery": 0.6437620520591736,
+        "corrupted_flank_length": 67,
+        "corrupted_recovery": 0.08224640786647797
+    },
+    "2PKEA": {
+        "clean_flank_length": 57,
+        "clean_recovery": 0.6155145764350891,
+        "corrupted_flank_length": 56,
+        "corrupted_recovery": 0.01820756494998932
+    },
+    "2QY6A": {
+        "clean_flank_length": 32,
+        "clean_recovery": 0.5565229654312134,
+        "corrupted_flank_length": 31,
+        "corrupted_recovery": 0.03168993443250656
+    },
+    "2XD3A": {
+        "clean_flank_length": 54,
+        "clean_recovery": 0.8758435249328613,
+        "corrupted_flank_length": 53,
+        "corrupted_recovery": 0.013050857000052929
+    },
+    "2YHWA": {
+        "clean_flank_length": 62,
+        "clean_recovery": 0.8795667886734009,
+        "corrupted_flank_length": 61,
+        "corrupted_recovery": 0.010395699180662632
+    },
+    "2YXZA": {
+        "clean_flank_length": 64,
+        "clean_recovery": 0.6946598887443542,
+        "corrupted_flank_length": 63,
+        "corrupted_recovery": 0.01915479265153408
+    },
+    "3BWXA": {
+        "clean_flank_length": 33,
+        "clean_recovery": 1.0199867486953735,
+        "corrupted_flank_length": 32,
+        "corrupted_recovery": 0.009474880062043667
+    },
+    "3CSSA": {
+        "clean_flank_length": 35,
+        "clean_recovery": 0.9002236127853394,
+        "corrupted_flank_length": 34,
+        "corrupted_recovery": 0.008212209679186344
+    },
+    "3DGTA": {
+        "clean_flank_length": 67,
+        "clean_recovery": 0.7477136254310608,
+        "corrupted_flank_length": 66,
+        "corrupted_recovery": 0.042762044817209244
+    },
+    "3FD3A": {
+        "clean_flank_length": 59,
+        "clean_recovery": 0.552593469619751,
+        "corrupted_flank_length": 58,
+        "corrupted_recovery": 0.011185236275196075
+    },
+    "3HO7A": {
+        "clean_flank_length": 43,
+        "clean_recovery": 0.8569396734237671,
+        "corrupted_flank_length": 42,
+        "corrupted_recovery": 0.3557393550872803
+    },
+    "3LEWA": {
+        "clean_flank_length": 57,
+        "clean_recovery": 0.527384877204895,
+        "corrupted_flank_length": 56,
+        "corrupted_recovery": 0.009947158396244049
+    },
+    "3OKPA": {
+        "clean_flank_length": 69,
+        "clean_recovery": 0.8964409232139587,
+        "corrupted_flank_length": 68,
+        "corrupted_recovery": 0.11033742129802704
+    },
+    "3QDLA": {
+        "clean_flank_length": 40,
+        "clean_recovery": 0.7185279726982117,
+        "corrupted_flank_length": 39,
+        "corrupted_recovery": 0.1492176353931427
+    },
+    "3T4LA": {
+        "clean_flank_length": 56,
+        "clean_recovery": 1.0757622718811035,
+        "corrupted_flank_length": 55,
+        "corrupted_recovery": 0.4086627960205078
+    },
+    "3WJPA": {
+        "clean_flank_length": 59,
+        "clean_recovery": 1.1112236976623535,
+        "corrupted_flank_length": 58,
+        "corrupted_recovery": 0.036371421068906784
+    },
+    "4DM7A": {
+        "clean_flank_length": 36,
+        "clean_recovery": 0.9652304649353027,
+        "corrupted_flank_length": 35,
+        "corrupted_recovery": 0.010828941129148006
+    },
+    "4EHUA": {
+        "clean_flank_length": 34,
+        "clean_recovery": 0.6809021830558777,
+        "corrupted_flank_length": 33,
+        "corrupted_recovery": 0.06450673937797546
+    },
+    "4EX6A": {
+        "clean_flank_length": 40,
+        "clean_recovery": 0.8467617034912109,
+        "corrupted_flank_length": 39,
+        "corrupted_recovery": 0.024155467748641968
+    },
+    "4EZIA": {
+        "clean_flank_length": 38,
+        "clean_recovery": 0.795741617679596,
+        "corrupted_flank_length": 37,
+        "corrupted_recovery": 0.013264227658510208
+    },
+    "4G41A": {
+        "clean_flank_length": 50,
+        "clean_recovery": 0.9031453132629395,
+        "corrupted_flank_length": 49,
+        "corrupted_recovery": 0.29657191038131714
+    },
+    "4HZIA": {
+        "clean_flank_length": 33,
+        "clean_recovery": 0.8631970882415771,
+        "corrupted_flank_length": 32,
+        "corrupted_recovery": 0.14813965559005737
+    },
+    "4ME3A": {
+        "clean_flank_length": 50,
+        "clean_recovery": 1.0465335845947266,
+        "corrupted_flank_length": 49,
+        "corrupted_recovery": 0.369910329580307
+    },
+    "4MFIA": {
+        "clean_flank_length": 69,
+        "clean_recovery": 0.6302307844161987,
+        "corrupted_flank_length": 68,
+        "corrupted_recovery": 0.07958684861660004
+    },
+    "4N9WA": {
+        "clean_flank_length": 61,
+        "clean_recovery": 0.779076337814331,
+        "corrupted_flank_length": 60,
+        "corrupted_recovery": 0.021236015483736992
+    },
+    "4OY3A": {
+        "clean_flank_length": 39,
+        "clean_recovery": 0.5170344114303589,
+        "corrupted_flank_length": 38,
+        "corrupted_recovery": 0.013689149171113968
+    },
+    "4R6KA": {
+        "clean_flank_length": 60,
+        "clean_recovery": 0.6466585397720337,
+        "corrupted_flank_length": 59,
+        "corrupted_recovery": 0.025583403185009956
+    },
+    "4TL6A": {
+        "clean_flank_length": 50,
+        "clean_recovery": 0.8672394752502441,
+        "corrupted_flank_length": 49,
+        "corrupted_recovery": 0.006885874550789595
+    },
+    "4WY2A": {
+        "clean_flank_length": 45,
+        "clean_recovery": 0.650750458240509,
+        "corrupted_flank_length": 44,
+        "corrupted_recovery": 0.07178483158349991
+    },
+    "5AB4A": {
+        "clean_flank_length": 66,
+        "clean_recovery": 1.0715681314468384,
+        "corrupted_flank_length": 65,
+        "corrupted_recovery": 0.057156872004270554
+    },
+    "5AJGA": {
+        "clean_flank_length": 40,
+        "clean_recovery": 1.1175963878631592,
+        "corrupted_flank_length": 39,
+        "corrupted_recovery": 0.11388453841209412
+    },
+    "5HEEA": {
+        "clean_flank_length": 33,
+        "clean_recovery": 1.046875,
+        "corrupted_flank_length": 32,
+        "corrupted_recovery": 0.020710503682494164
+    },
+    "5IVKA": {
+        "clean_flank_length": 67,
+        "clean_recovery": 1.189254641532898,
+        "corrupted_flank_length": 66,
+        "corrupted_recovery": 0.013095117174088955
+    }
+}
