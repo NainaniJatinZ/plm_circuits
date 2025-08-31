@@ -172,9 +172,13 @@ for protein, sse in ss_dict.items():
 with open('../data/jump_details_esm_650.json', 'w') as f:
     json.dump(jump_details_esm_650, f, indent=4)
 
+# %% 
+with open('../data/jump_details_esm_650.json', 'r') as f:
+    jump_details_esm_650 = json.load(f)
+
 # %%
 
-protein = '2EK8A'
+protein = '2PKEA'
 seq = seq_dict[protein]
 ss1_start = ss_dict[protein][0][0] - 5 
 ss1_end = ss_dict[protein][0][0] + 5 + 1 
@@ -461,7 +465,7 @@ target_recovery_percent = 0.7
 layer_circuit_sizes = {}
 layer_circuit_recoveries = {}
 
-for layer in main_layers[:1]:
+for layer in main_layers[:4]:
     k, recovery = find_k_for_recovery_threshold(
         layer, target_recovery_percent, all_effects_sae_ALS,
         clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
@@ -471,10 +475,9 @@ for layer in main_layers[:1]:
     layer_circuit_recoveries[layer] = recovery
 
 print(f"\nCircuit sizes for {target_recovery_percent*100:.0f}% baseline recovery:")
-for layer in main_layers[:1]:
+for layer in main_layers[:4]:
     print(f"Layer {layer}: {layer_circuit_sizes[layer]} features (recovery: {layer_circuit_recoveries[layer]:.4f})")
 # %%
-
 
 def get_top_k_feature_indices(layer: int, k: int, all_effects_sae_ALS: torch.Tensor) -> List[Tuple[int, int]]:
     """
@@ -507,8 +510,16 @@ def get_top_k_feature_indices(layer: int, k: int, all_effects_sae_ALS: torch.Ten
     
     return feature_indices
 
+# %%
 
+latent_token_pairs_L4 = get_top_k_feature_indices(4, layer_circuit_sizes[4], all_effects_sae_ALS)
+unique_latents_L4 = set([latent for _, latent in latent_token_pairs_L4])
+print(f"Unique latents in L4: {(unique_latents_L4)}")
 
+# %%
+latent_token_pairs_L12 = get_top_k_feature_indices(12, layer_circuit_sizes[12], all_effects_sae_ALS)
+unique_latents_L12 = set([latent for _, latent in latent_token_pairs_L12])
+print(f"Unique latents in L12: {(unique_latents_L12)}")
 
 # %%
 
