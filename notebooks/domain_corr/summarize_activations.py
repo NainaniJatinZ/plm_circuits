@@ -27,6 +27,13 @@ if __name__ == "__main__":
         elif args.summarize == "max":
             tmp_store = torch.cat( 
                 tuple([torch.max(cur_ptn['activations'][l], axis=0).values for l in tmp.layers]))
+        elif args.summarize == "top_q":
+            # Compute mean over top 1% of activations for each layer
+            tmp_store = torch.cat( 
+                tuple([torch.topk(cur_ptn['activations'][l], 
+                                  k=max(1, int(0.01 * cur_ptn['activations'][l].shape[0])), 
+                                  dim=0)[0].mean(dim=0) 
+                       for l in tmp.layers]))
         summarized_activations[protein_ix,:] = tmp_store
 
     torch.save(summarized_activations, f"data/summarized_acts_{args.summarize}.pt")

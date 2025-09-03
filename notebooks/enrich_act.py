@@ -213,8 +213,8 @@ def process_proteins_all_layers(records, n_proteins, save_path, device, esm_tran
 # Main execution
 if __name__ == "__main__":
     # CONFIGURATION - MODIFY THESE PATHS
-    FASTA_PATH = pathlib.Path("../../plm_interp/uniprot_sprot.fasta")
-    SAVE_PATH = "/project/pi_annagreen_umass_edu/jatin/plm_circuits/acts" #"/project/pi_jensen_umass_edu/jnainani_umass_edu/plm_data/full_activation_cache"
+    FASTA_PATH = pathlib.Path("/mnt/polished-lake/home/connor/plm_circuits/uniprot_sprot.fasta")
+    SAVE_PATH = "/mnt/polished-lake/home/connor/plm_circuits/acts" #"/project/pi_jensen_umass_edu/jnainani_umass_edu/plm_data/full_activation_cache"
     N_PROTEINS = 10000
     RANDOM_SEED = 42  # Set to None for no seed, or any integer for reproducibility
     
@@ -238,7 +238,9 @@ if __name__ == "__main__":
     
     # Load ESM-2 model
     print("Loading ESM-2 model...")
-    esm_transformer, batch_converter, esm2_alphabet = load_esm(33, device=device)
+    # Use home directory for model weights cache
+    weights_dir = os.path.expanduser("~/.cache/torch/")
+    esm_transformer, batch_converter, esm2_alphabet = load_esm(33, WEIGHTS_DIR=weights_dir, device=device)
     
     # Load SAEs
     print("Loading SAE models...")
