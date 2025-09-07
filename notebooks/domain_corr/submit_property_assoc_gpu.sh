@@ -27,7 +27,7 @@ cd notebooks/domain_corr
 mkdir -p .
 
 # -u ensures output is unbuffered  
-python3 -u property_association_quantification.py ../../data/summarized_acts_top_q.pt metadata/ptn_fam_tensor_nonzero.pt --subsetListFile metadata/list_of_desired_latents.pkl --outfile latents_property_top_q &> out2.log
+python3 -u property_association_quantification.py ../../data/summarized_acts_top_q.pt metadata/ptn_fam_tensor_nonzero.pt --subsetListFile metadata/list_of_desired_latents_2pkea.pkl --outfile latents_property_2pkea_top_q &> out2.log
 
 # TEST VERSION - processes only 10 latents and 5 properties
 # python3 -u test_property_association.py ../../data/summarized_acts_top_q.pt metadata/ptn_fam_tensor_nonzero.pt --subsetListFile metadata/list_of_desired_latents.pkl --outfile test_latents_property_top_q --test_latents 10 --test_properties 5 &> out2.log  
