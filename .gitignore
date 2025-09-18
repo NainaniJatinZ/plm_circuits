@@ -177,3 +177,6 @@ logs/
 *.pt
 *.tsv
 *.ent
+*.pdb
+*.out
+*.err
