@@ -180,7 +180,7 @@ def view_single_protein(
 
     residues = list(structure.get_residues())
     n_res = len(residues)
-    print(f"Structure has {n_res} residues in chain {chain_id}.")
+    # print(f"Structure has {n_res} residues in chain {chain_id}.")
 
     if values_to_color is None:
         values_to_color = [0.0] * n_res
