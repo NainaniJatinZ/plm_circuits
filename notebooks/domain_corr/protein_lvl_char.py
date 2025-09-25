@@ -1093,7 +1093,7 @@ save_activation_curve(
     tau=0.99,
     symlog=False,
     all_acts=all_acts_topq,
-    tail_regions=tail_regions_drop,
+    tail_regions=tail_regions_drop, # CONNOR: get tail in this format 
     tail_label="drop tail",
     tail_color="mediumseagreen",
     tail_linecolor="mediumseagreen",
@@ -1161,7 +1161,7 @@ for latent_i in tqdm(ALL_LATENTS, desc="Analyzing latents"):
         min_val = float(scores_sorted[-1]) if scores_sorted.size else 0.0
         span_val = float(max_val - min_val)
 
-        df_stats = analyze_latent_per_domain(
+        df_stats = analyze_latent_per_domain( # CONNOR: mwu + precision @ n_domain
             all_acts_topq,
             all_properties,
             latent_i,
@@ -1179,7 +1179,7 @@ for latent_i in tqdm(ALL_LATENTS, desc="Analyzing latents"):
         # break
         domain_idxs = df_sig["domain_idx"].to_numpy(dtype=int)
 
-        baseline_df = screen_domains_tail_enrichment(
+        baseline_df = screen_domains_tail_enrichment( # CONNOR: odds ratio, fisher p, median_pos_percentile, tau_cover_95, tau_cover_90, tau_all_in 
             all_acts_topq,
             all_properties,
             latent_i=latent_i,
@@ -1254,7 +1254,7 @@ for latent_i in tqdm(ALL_LATENTS, desc="Analyzing latents"):
                 }
             )
 
-            df_tail = screen_domains_tail_enrichment(
+            df_tail = screen_domains_tail_enrichment( # CONNOR: odds ratio for each tail
                 all_acts_topq,
                 all_properties,
                 latent_i=latent_i,
