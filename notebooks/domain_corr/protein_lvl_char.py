@@ -187,6 +187,238 @@ def _second_derivative_candidate_indices(s: np.ndarray) -> Tuple[np.ndarray, np.
     return idxs[valid], scores[valid]
 
 
+def _adaptive_derivative_candidate_indices(s: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """Return candidate boundaries using adaptive smoothing and context-aware scoring."""
+    N = s.size
+    if N < 10:
+        return np.array([], dtype=int), np.array([], dtype=float)
+
+    drops = s[:-1] - s[1:]
+
+    base_window = max(5, min(int(N * 0.02), 101))
+    if base_window % 2 == 0:
+        base_window += 1
+
+    multi_scale_scores = np.zeros(N - 2)
+
+    for scale in [0.5, 1.0, 2.0]:
+        window = int(base_window * scale)
+        if window < 5:
+            window = 5
+        if window >= N:
+            window = N - 1
+        if window % 2 == 0:
+            window += 1
+
+        if window >= 5 and N > window:
+            polyorder = min(3, window - 2)
+            smooth = savgol_filter(s.astype(float), window_length=window, polyorder=polyorder)
+            d2 = np.diff(smooth, n=2)
+
+            if d2.size == multi_scale_scores.size:
+                multi_scale_scores += np.abs(d2)
+
+    multi_scale_scores = multi_scale_scores / 3.0
+
+    context_window = max(10, N // 100)
+    context_scores = np.zeros(N - 2)
+
+    for i in range(N - 2):
+        idx_after_start = min(i + 2, N - 1)
+        idx_after_end = min(i + 2 + context_window, N - 1)
+
+        if idx_after_end > idx_after_start:
+            drops_after = drops[idx_after_start:idx_after_end]
+            avg_drop_after = drops_after.mean() if drops_after.size > 0 else 0.0
+        else:
+            avg_drop_after = 0.0
+
+        context_scores[i] = float(avg_drop_after)
+
+    raw_drop_bonus = np.zeros(N - 2)
+    for i in range(N - 2):
+        if i < len(drops):
+            drop_magnitude = drops[i]
+            max_drop = drops.max() if drops.size > 0 else 1.0
+            raw_drop_bonus[i] = drop_magnitude / (max_drop + 1e-12)
+
+    combined_scores = multi_scale_scores * (1.0 + context_scores) * (1.0 + raw_drop_bonus)
+
+    idxs = np.arange(1, N - 1)
+    scores = combined_scores
+
+    order = np.argsort(scores)[::-1]
+    idxs = idxs[order]
+    scores = scores[order]
+
+    valid = (idxs > 0) & (idxs < N - 1) & (scores > 0)
+    return idxs[valid], scores[valid]
+
+
+def _adaptive_v2_candidate_indices(s: np.ndarray, min_prom: float = 0.01) -> Tuple[np.ndarray, np.ndarray]:
+    """Return candidate boundaries combining multi-scale derivatives with prominence-based peak detection."""
+    N = s.size
+    if N < 10:
+        return np.array([], dtype=int), np.array([], dtype=float)
+
+    y = (s - s.min()) / (s.max() - s.min() + 1e-12)
+    drops = s[:-1] - s[1:]
+
+    base_window = max(5, min(int(N * 0.02), 101))
+    if base_window % 2 == 0:
+        base_window += 1
+
+    multi_scale_scores = np.zeros(N - 2)
+
+    for scale in [0.5, 1.0, 2.0]:
+        window = int(base_window * scale)
+        if window < 5:
+            window = 5
+        if window >= N:
+            window = N - 1
+        if window % 2 == 0:
+            window += 1
+
+        if window >= 5 and N > window:
+            polyorder = min(3, window - 2)
+            smooth = savgol_filter(y.astype(float), window_length=window, polyorder=polyorder)
+            d2 = np.diff(smooth, n=2)
+
+            if d2.size == multi_scale_scores.size:
+                multi_scale_scores += np.abs(d2)
+
+    multi_scale_scores = multi_scale_scores / 3.0
+
+    context_window = max(10, N // 100)
+    context_scores = np.zeros(N - 2)
+
+    for i in range(N - 2):
+        idx_after_start = min(i + 2, N - 1)
+        idx_after_end = min(i + 2 + context_window, N - 1)
+
+        if idx_after_end > idx_after_start:
+            drops_after = drops[idx_after_start:idx_after_end]
+            avg_drop_after = drops_after.mean() if drops_after.size > 0 else 0.0
+        else:
+            avg_drop_after = 0.0
+
+        context_scores[i] = float(avg_drop_after)
+
+    raw_drop_bonus = np.zeros(N - 2)
+    for i in range(N - 2):
+        if i < len(drops):
+            drop_magnitude = drops[i]
+            max_drop = drops.max() if drops.size > 0 else 1.0
+            raw_drop_bonus[i] = drop_magnitude / (max_drop + 1e-12)
+
+    combined_scores = multi_scale_scores * (1.0 + context_scores) * (1.0 + raw_drop_bonus)
+
+    if combined_scores.max() > 0:
+        combined_scores = combined_scores / combined_scores.max()
+
+    try:
+        peaks, props = find_peaks(combined_scores, prominence=min_prom)
+
+        if peaks.size > 0:
+            prominences = props["prominence"]
+            order = np.argsort(prominences)[::-1]
+
+            idxs = peaks[order] + 1
+            scores = prominences[order]
+
+            min_spacing = max(10, N // 200)
+            selected_idxs = []
+            selected_scores = []
+
+            for idx, score in zip(idxs, scores):
+                if not selected_idxs or all(abs(idx - prev_idx) >= min_spacing for prev_idx in selected_idxs):
+                    selected_idxs.append(idx)
+                    selected_scores.append(score)
+
+            idxs = np.array(selected_idxs, dtype=int)
+            scores = np.array(selected_scores, dtype=float)
+
+            valid = (idxs > 0) & (idxs < N - 1)
+            return idxs[valid], scores[valid]
+        else:
+            idxs = np.arange(1, N - 1)
+            order = np.argsort(combined_scores)[::-1]
+
+            selected_idxs = []
+            selected_scores = []
+            min_spacing = max(10, N // 200)
+
+            for idx in order:
+                actual_idx = idx + 1
+                if not selected_idxs or all(abs(actual_idx - prev_idx) >= min_spacing for prev_idx in selected_idxs):
+                    selected_idxs.append(actual_idx)
+                    selected_scores.append(combined_scores[idx])
+                if len(selected_idxs) >= 10:
+                    break
+
+            idxs = np.array(selected_idxs, dtype=int)
+            scores = np.array(selected_scores, dtype=float)
+
+            valid = (idxs > 0) & (idxs < N - 1) & (scores > 0)
+            return idxs[valid], scores[valid]
+
+    except Exception:
+        idxs = np.arange(1, N - 1)
+        order = np.argsort(combined_scores)[::-1]
+        idxs = idxs[order]
+        scores = combined_scores[order]
+
+        valid = (idxs > 0) & (idxs < N - 1) & (scores > 0)
+        return idxs[valid], scores[valid]
+
+
+def _changepoint_candidate_indices(s: np.ndarray, max_changepoints: int = 10) -> Tuple[np.ndarray, np.ndarray]:
+    """Return candidate knees using changepoint detection (Pelt algorithm)."""
+    N = s.size
+    if N < 5:
+        return np.array([], dtype=int), np.array([], dtype=float)
+
+    signal = s.astype(float).reshape(-1, 1)
+
+    try:
+        algo = rpt.Pelt(model="rbf", min_size=3, jump=1).fit(signal)
+        changepoints = algo.predict(pen=1.0)
+
+        if not changepoints or changepoints[-1] != N:
+            changepoints = [cp for cp in changepoints if cp < N]
+
+        if not changepoints:
+            return np.array([], dtype=int), np.array([], dtype=float)
+
+        drops = s[:-1] - s[1:]
+        scores_list = []
+        valid_cps = []
+
+        for cp in changepoints:
+            cp_idx = cp - 1
+            if 0 < cp_idx < N - 1:
+                drop_before = drops[max(0, cp_idx-1):cp_idx+1].mean() if cp_idx > 0 else 0.0
+                drop_at = drops[cp_idx]
+                score = float(np.abs(drop_at - drop_before))
+                scores_list.append(score)
+                valid_cps.append(cp_idx)
+
+        if not valid_cps:
+            return np.array([], dtype=int), np.array([], dtype=float)
+
+        idxs = np.array(valid_cps, dtype=int)
+        scores = np.array(scores_list, dtype=float)
+
+        order = np.argsort(scores)[::-1]
+        idxs = idxs[order][:max_changepoints]
+        scores = scores[order][:max_changepoints]
+
+        return idxs, scores
+
+    except Exception:
+        return np.array([], dtype=int), np.array([], dtype=float)
+
+
 def find_activation_tail_regions(
     layer_i: int,
     latent_ind: int,
@@ -202,9 +434,17 @@ def find_activation_tail_regions(
 
     Returns dictionaries describing the top `n_regions` non-overlapping drops,
     ordered by a ranking metric tied to the selected method (`drop`, `kneedle`,
-    or `second_derivative`). Each dictionary includes the rank where the drop
-    occurs, corresponding tau values, and the absolute / relative drop size to
-    help with downstream filtering or plotting.
+    `second_derivative`, or `changepoint`). Each dictionary includes the rank
+    where the drop occurs, corresponding tau values, and the absolute / relative
+    drop size to help with downstream filtering or plotting.
+
+    Methods:
+        - drop: Largest relative drops in sorted activations
+        - kneedle: Kneedle algorithm for convex curve knees
+        - second_derivative: Savitzky-Golay smoothing + curvature
+        - adaptive: Multi-scale derivative with context-aware scoring
+        - adaptive_v2: Combines adaptive with prominence-based peak detection and spacing
+        - changepoint: Pelt algorithm for structural breaks
     """
     flattened_id = to_flattened_id(int(layer_i), int(latent_ind))
     try:
@@ -250,8 +490,19 @@ def find_activation_tail_regions(
         order_candidates, scores = _second_derivative_candidate_indices(s)
         candidate_scores = {int(idx): float(score) for idx, score in zip(order_candidates, scores)}
         method = "second_derivative"
+    elif method in {"adaptive", "adaptive_derivative"}:
+        order_candidates, scores = _adaptive_derivative_candidate_indices(s)
+        candidate_scores = {int(idx): float(score) for idx, score in zip(order_candidates, scores)}
+        method = "adaptive"
+    elif method in {"adaptive_v2", "adaptive2"}:
+        order_candidates, scores = _adaptive_v2_candidate_indices(s)
+        candidate_scores = {int(idx): float(score) for idx, score in zip(order_candidates, scores)}
+        method = "adaptive_v2"
+    elif method == "changepoint":
+        order_candidates, scores = _changepoint_candidate_indices(s, max_changepoints=n_regions*3)
+        candidate_scores = {int(idx): float(score) for idx, score in zip(order_candidates, scores)}
     else:
-        raise ValueError(f"Unknown method '{method}'. Expected 'drop', 'kneedle', or 'second_derivative'.")
+        raise ValueError(f"Unknown method '{method}'. Expected 'drop', 'kneedle', 'second_derivative', 'adaptive', 'adaptive_v2', or 'changepoint'.")
 
     # ensure candidates correspond to valid drops (need idx + 1 < N)
     order_candidates = [int(idx) for idx in order_candidates if int(idx) < N - 1]
@@ -848,6 +1099,7 @@ def analyze_latent_per_domain(
     all_acts, all_properties, latent_i: int,
     entry_names=None,
     k_multipliers=(1, 2),       # use k = mult * n_in
+    percentile_thresholds=(0.99, 0.95),  # use k at fixed percentiles
     use_bonferroni=True,
     min_in=20, min_out=200,
     summarized="topq"           # just for bookkeeping in the output
@@ -857,7 +1109,8 @@ def analyze_latent_per_domain(
     - n_in/n_out
     - MWU p and Bonf (P1)
     - precision/lift at k=n_in and 2*n_in (P2)
-    - Fisher p + OR on the same 2x2 at each k (P2)
+    - precision/lift at percentile thresholds (P3)
+    - Fisher p + OR on the same 2x2 at each k (P2 & P3)
     """
     X = to_numpy(all_acts)
     D = (to_numpy(all_properties) != 0)
@@ -873,7 +1126,10 @@ def analyze_latent_per_domain(
     if idxs.size == 0:
         cols = ["domain_idx","entry_name","n_in","n_out","mwu_p","mwu_p_adj","mwu_auc"]
         for mult in k_multipliers:
-            cols += [f"k_{mult}x","precision","lift","fisher_p","fisher_p_adj","or_topk"]
+            cols += [f"k_{mult}x","precision_{mult}x","lift_{mult}x","fisher_p_{mult}x","fisher_p_adj_{mult}x","or_topk_{mult}x"]
+        for ptile in percentile_thresholds:
+            cols += [f"k_p{int(ptile*100)}",f"precision_p{int(ptile*100)}",f"lift_p{int(ptile*100)}",
+                     f"fisher_p_p{int(ptile*100)}",f"fisher_p_adj_p{int(ptile*100)}",f"or_topk_p{int(ptile*100)}"]
         return pd.DataFrame(columns=cols)
 
     # --- P1: MWU per domain (correct within this latent's tested domains) ---
@@ -887,10 +1143,18 @@ def analyze_latent_per_domain(
 
     mwu_p_adj = bonferroni_local(mwu_p) if use_bonferroni else mwu_p
 
+    # Compute percentile thresholds once for all domains
+    percentile_k_values = {}
+    for ptile in percentile_thresholds:
+        k_ptile = int(np.ceil((1.0 - ptile) * N))
+        k_ptile = max(1, min(N, k_ptile))
+        percentile_k_values[ptile] = k_ptile
+
     # --- P2: top-k metrics at k = n_in and 2*n_in (no knee) ---
     # We also Bonferroni-correct Fisher p's within this same set.
     results = []
-    fisher_cols = []
+    fisher_ps_mult = {mult: [] for mult in k_multipliers}
+    fisher_ps_ptile = {ptile: [] for ptile in percentile_thresholds}
     for j, dom in enumerate(idxs):
         row = {
             "domain_idx": int(dom),
@@ -903,8 +1167,8 @@ def analyze_latent_per_domain(
             "prevalence": float(prevs[dom]),
             "summary_kind": summarized,
         }
-        # compute once and store; we'll collect fisher p's to adjust jointly
-        fisher_ps_this = []
+
+        # Domain-size-based k values (k = mult * n_in)
         for mult in k_multipliers:
             k = int(max(1, min(scores.size, mult * n_in[dom])))
             tm = topk_metrics(scores, D[:, dom], k)
@@ -915,8 +1179,21 @@ def analyze_latent_per_domain(
                 f"or_topk_{mult}x": tm["or_topk"],
                 f"fisher_p_{mult}x": tm["fisher_p_topk"],
             })
-            fisher_ps_this.append(tm["fisher_p_topk"])
-            fisher_cols.append((len(results), mult))  # remember where to write adj p
+            fisher_ps_mult[mult].append(tm["fisher_p_topk"])
+
+        # Percentile-based k values (k at fixed percentiles)
+        for ptile in percentile_thresholds:
+            k = percentile_k_values[ptile]
+            tm = topk_metrics(scores, D[:, dom], k)
+            row.update({
+                f"k_p{int(ptile*100)}": k,
+                f"precision_p{int(ptile*100)}": tm["precision_k"],
+                f"lift_p{int(ptile*100)}": tm["lift_k"],
+                f"or_topk_p{int(ptile*100)}": tm["or_topk"],
+                f"fisher_p_p{int(ptile*100)}": tm["fisher_p_topk"],
+            })
+            fisher_ps_ptile[ptile].append(tm["fisher_p_topk"])
+
         results.append(row)
 
     df = pd.DataFrame(results)
@@ -925,10 +1202,16 @@ def analyze_latent_per_domain(
         for mult in k_multipliers:
             pcol = f"fisher_p_{mult}x"
             df[f"fisher_p_adj_{mult}x"] = bonferroni_local(df[pcol].to_numpy())
+        for ptile in percentile_thresholds:
+            pcol = f"fisher_p_p{int(ptile*100)}"
+            df[f"fisher_p_adj_p{int(ptile*100)}"] = bonferroni_local(df[pcol].to_numpy())
     else:
         for mult in k_multipliers:
             pcol = f"fisher_p_{mult}x"
             df[f"fisher_p_adj_{mult}x"] = df[pcol].to_numpy()
+        for ptile in percentile_thresholds:
+            pcol = f"fisher_p_p{int(ptile*100)}"
+            df[f"fisher_p_adj_p{int(ptile*100)}"] = df[pcol].to_numpy()
 
     # convenience sort: by mwu_p_adj then precision at 1x
     if f"precision_{k_multipliers[0]}x" in df.columns:
