@@ -180,3 +180,7 @@ logs/
 *.pdb
 *.out
 *.err
+*/results
+*/*/results
+*domain_results_all*
+*/sequence_logos_clean/

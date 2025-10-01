@@ -1,0 +1,1196 @@
+{
+  "summary": {
+    "total_proteins": 43,
+    "processed_proteins": 32,
+    "skipped_proteins": 11,
+    "skipped_list": [
+      "1IN4A",
+      "1YKIA",
+      "3FD3A",
+      "3HO7A",
+      "3OKPA",
+      "3QDLA",
+      "3T4LA",
+      "4G41A",
+      "4HZIA",
+      "4ME3A",
+      "5AJGA"
+    ],
+    "processed_list": [
+      "1BRTA",
+      "1MJ5A",
+      "1NOXA",
+      "1PVGA",
+      "2B61A",
+      "2DPMA",
+      "2EK8A",
+      "2FBQA",
+      "2HFSA",
+      "2PKEA",
+      "2QY6A",
+      "2XD3A",
+      "2YHWA",
+      "2YXZA",
+      "3BWXA",
+      "3CSSA",
+      "3DGTA",
+      "3LEWA",
+      "3WJPA",
+      "4DM7A",
+      "4EHUA",
+      "4EX6A",
+      "4EZIA",
+      "4MFIA",
+      "4N9WA",
+      "4OY3A",
+      "4R6KA",
+      "4TL6A",
+      "4WY2A",
+      "5AB4A",
+      "5HEEA",
+      "5IVKA"
+    ],
+    "target_recovery_percent": 0.7,
+    "selected_layers": [
+      4,
+      8,
+      12,
+      16
+    ],
+    "timestamp": "2025-08-30T16:04:05.332852"
+  },
+  "results": {
+    "1BRTA": {
+      "protein": "1BRTA",
+      "skipped": false,
+      "baseline_recovery": 0.7367178797721863,
+      "corrupted_recovery": 0.015240390785038471,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 5,
+        "12": 35,
+        "16": 46
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.6824917793273926,
+        "8": 0.5265947580337524,
+        "12": 0.5206719636917114,
+        "16": 0.5174317955970764
+      },
+      "layer_r0_values": {
+        "4": 0.668647825717926,
+        "8": 0.18506425619125366,
+        "12": 0.010458960197865963,
+        "16": 0.01381769496947527
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 32,
+      "corrupted_flank_length": 31
+    },
+    "1IN4A": {
+      "protein": "1IN4A",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.3736_above_threshold",
+      "baseline_recovery": 0.9656456112861633,
+      "corrupted_recovery": 0.37359437346458435
+    },
+    "1MJ5A": {
+      "protein": "1MJ5A",
+      "skipped": false,
+      "baseline_recovery": 0.8945256471633911,
+      "corrupted_recovery": 0.007809212431311607,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 1,
+        "12": 5,
+        "16": 53
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.8686602711677551,
+        "8": 0.838240921497345,
+        "12": 0.6601837277412415,
+        "16": 0.626805305480957
+      },
+      "layer_r0_values": {
+        "4": 0.866274893283844,
+        "8": 0.6839209198951721,
+        "12": 0.016706088557839394,
+        "16": 0.008524473756551743
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 35,
+      "corrupted_flank_length": 34
+    },
+    "1NOXA": {
+      "protein": "1NOXA",
+      "skipped": false,
+      "baseline_recovery": 0.6426883339881897,
+      "corrupted_recovery": 0.013175529427826405,
+      "layer_circuit_sizes": {
+        "4": 8,
+        "8": 1,
+        "12": 283,
+        "16": 212
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.46099287271499634,
+        "8": 0.5904085636138916,
+        "12": 0.4709027409553528,
+        "16": 0.45892155170440674
+      },
+      "layer_r0_values": {
+        "4": 0.014472625218331814,
+        "8": 0.5993807911872864,
+        "12": 0.012369459494948387,
+        "16": 0.01980992965400219
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 25,
+      "corrupted_flank_length": 24
+    },
+    "1PVGA": {
+      "protein": "1PVGA",
+      "skipped": false,
+      "baseline_recovery": 0.5921511054039001,
+      "corrupted_recovery": 0.06444325298070908,
+      "layer_circuit_sizes": {
+        "4": 26,
+        "8": 56,
+        "12": 13,
+        "16": 8
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.4158060848712921,
+        "8": 0.45785462856292725,
+        "12": 0.41878798604011536,
+        "16": 0.42416152358055115
+      },
+      "layer_r0_values": {
+        "4": 0.14665597677230835,
+        "8": 0.06790219247341156,
+        "12": 0.10350310802459717,
+        "16": 0.17881666123867035
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 64,
+      "corrupted_flank_length": 63
+    },
+    "1YKIA": {
+      "protein": "1YKIA",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.1791_above_threshold",
+      "baseline_recovery": 0.7542047500610352,
+      "corrupted_recovery": 0.1791408807039261
+    },
+    "2B61A": {
+      "protein": "2B61A",
+      "skipped": false,
+      "baseline_recovery": 0.5737990140914917,
+      "corrupted_recovery": 0.0278549212962389,
+      "layer_circuit_sizes": {
+        "4": 30,
+        "8": 11,
+        "12": 50,
+        "16": 85
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.40325728058815,
+        "8": 0.4125126302242279,
+        "12": 0.40392571687698364,
+        "16": 0.40373483300209045
+      },
+      "layer_r0_values": {
+        "4": 0.02720707468688488,
+        "8": 0.255336731672287,
+        "12": 0.15649591386318207,
+        "16": 0.07798585295677185
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 44,
+      "corrupted_flank_length": 43
+    },
+    "2DPMA": {
+      "protein": "2DPMA",
+      "skipped": false,
+      "baseline_recovery": 0.9394317865371704,
+      "corrupted_recovery": 0.016853421926498413,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 8,
+        "12": 279,
+        "16": 294
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.9116061329841614,
+        "8": 0.6695173978805542,
+        "12": 0.6609082221984863,
+        "16": 0.657849133014679
+      },
+      "layer_r0_values": {
+        "4": 0.9013508558273315,
+        "8": 0.10210974514484406,
+        "12": 0.011436114087700844,
+        "16": 0.015727899968624115
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 30,
+      "corrupted_flank_length": 29
+    },
+    "2EK8A": {
+      "protein": "2EK8A",
+      "skipped": false,
+      "baseline_recovery": 0.6519151329994202,
+      "corrupted_recovery": 0.0234746765345335,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 14,
+        "12": 124,
+        "16": 73
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.6415349245071411,
+        "8": 0.45738935470581055,
+        "12": 0.4591543674468994,
+        "16": 0.46229058504104614
+      },
+      "layer_r0_values": {
+        "4": 0.6300917267799377,
+        "8": 0.3261168897151947,
+        "12": 0.11536040902137756,
+        "16": 0.0525730662047863
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 50,
+      "corrupted_flank_length": 49
+    },
+    "2FBQA": {
+      "protein": "2FBQA",
+      "skipped": false,
+      "baseline_recovery": 0.8185400366783142,
+      "corrupted_recovery": 0.01297715213149786,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 85,
+        "12": 303,
+        "16": 201
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.7092761397361755,
+        "8": 0.5742081999778748,
+        "12": 0.5751246809959412,
+        "16": 0.57381671667099
+      },
+      "layer_r0_values": {
+        "4": 0.6582176685333252,
+        "8": 0.02271965518593788,
+        "12": 0.021487629041075706,
+        "16": 0.05114458128809929
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 61,
+      "corrupted_flank_length": 60
+    },
+    "2HFSA": {
+      "protein": "2HFSA",
+      "skipped": false,
+      "baseline_recovery": 0.6437620520591736,
+      "corrupted_recovery": 0.08224640786647797,
+      "layer_circuit_sizes": {
+        "4": 96,
+        "8": 1,
+        "12": 115,
+        "16": 218
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.46020570397377014,
+        "8": 0.5884383320808411,
+        "12": 0.45095303654670715,
+        "16": 0.45181533694267273
+      },
+      "layer_r0_values": {
+        "4": 0.017640722915530205,
+        "8": 0.5802828669548035,
+        "12": 0.2545316517353058,
+        "16": 0.020355146378278732
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 68,
+      "corrupted_flank_length": 67
+    },
+    "2PKEA": {
+      "protein": "2PKEA",
+      "skipped": false,
+      "baseline_recovery": 0.6155145764350891,
+      "corrupted_recovery": 0.01820756494998932,
+      "layer_circuit_sizes": {
+        "4": 14,
+        "8": 1,
+        "12": 39,
+        "16": 85
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.523637056350708,
+        "8": 0.732144296169281,
+        "12": 0.43200477957725525,
+        "16": 0.4367254972457886
+      },
+      "layer_r0_values": {
+        "4": 0.08521914482116699,
+        "8": 0.6970754861831665,
+        "12": 0.0669623389840126,
+        "16": 0.020334681496024132
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 57,
+      "corrupted_flank_length": 56
+    },
+    "2QY6A": {
+      "protein": "2QY6A",
+      "skipped": false,
+      "baseline_recovery": 0.5565229654312134,
+      "corrupted_recovery": 0.03168993443250656,
+      "layer_circuit_sizes": {
+        "4": 88,
+        "8": 12,
+        "12": 29,
+        "16": 69
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.3974786400794983,
+        "8": 0.4069978594779968,
+        "12": 0.3932107985019684,
+        "16": 0.39073318243026733
+      },
+      "layer_r0_values": {
+        "4": 0.05974465236067772,
+        "8": 0.07366228103637695,
+        "12": 0.13803166151046753,
+        "16": 0.08345834910869598
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 32,
+      "corrupted_flank_length": 31
+    },
+    "2XD3A": {
+      "protein": "2XD3A",
+      "skipped": false,
+      "baseline_recovery": 0.8758435249328613,
+      "corrupted_recovery": 0.013050857000052929,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 1,
+        "12": 33,
+        "16": 43
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.8514527678489685,
+        "8": 0.7906200289726257,
+        "12": 0.6153461337089539,
+        "16": 0.6251909136772156
+      },
+      "layer_r0_values": {
+        "4": 0.851405680179596,
+        "8": 0.7165552377700806,
+        "12": 0.053963806480169296,
+        "16": 0.052853960543870926
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 54,
+      "corrupted_flank_length": 53
+    },
+    "2YHWA": {
+      "protein": "2YHWA",
+      "skipped": false,
+      "baseline_recovery": 0.8795667886734009,
+      "corrupted_recovery": 0.010395699180662632,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 8,
+        "12": 40,
+        "16": 550
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.6558851599693298,
+        "8": 0.6255953311920166,
+        "12": 0.6178163290023804,
+        "16": 0.6238570213317871
+      },
+      "layer_r0_values": {
+        "4": 0.6458600163459778,
+        "8": 0.4625822901725769,
+        "12": 0.010516385547816753,
+        "16": 0.014673677273094654
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 62,
+      "corrupted_flank_length": 61
+    },
+    "2YXZA": {
+      "protein": "2YXZA",
+      "skipped": false,
+      "baseline_recovery": 0.6946598887443542,
+      "corrupted_recovery": 0.01915479265153408,
+      "layer_circuit_sizes": {
+        "4": 2,
+        "8": 5,
+        "12": 18,
+        "16": 89
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.5535078048706055,
+        "8": 0.5047755837440491,
+        "12": 0.5004403591156006,
+        "16": 0.4864669442176819
+      },
+      "layer_r0_values": {
+        "4": 0.03541717305779457,
+        "8": 0.24788279831409454,
+        "12": 0.026858098804950714,
+        "16": 0.021368181332945824
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 64,
+      "corrupted_flank_length": 63
+    },
+    "3BWXA": {
+      "protein": "3BWXA",
+      "skipped": false,
+      "baseline_recovery": 1.0199867486953735,
+      "corrupted_recovery": 0.009474880062043667,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 1,
+        "12": 19,
+        "16": 48
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.9306147694587708,
+        "8": 0.985457718372345,
+        "12": 0.7244599461555481,
+        "16": 0.721627950668335
+      },
+      "layer_r0_values": {
+        "4": 0.8897103071212769,
+        "8": 0.945437490940094,
+        "12": 0.013552636839449406,
+        "16": 0.011870401911437511
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 33,
+      "corrupted_flank_length": 32
+    },
+    "3CSSA": {
+      "protein": "3CSSA",
+      "skipped": false,
+      "baseline_recovery": 0.9002236127853394,
+      "corrupted_recovery": 0.008212209679186344,
+      "layer_circuit_sizes": {
+        "4": 15,
+        "8": 26,
+        "12": 150,
+        "16": 333
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.6344327330589294,
+        "8": 0.6409386396408081,
+        "12": 0.6556035876274109,
+        "16": 0.6358569264411926
+      },
+      "layer_r0_values": {
+        "4": 0.009635246358811855,
+        "8": 0.009197669103741646,
+        "12": 0.008977117016911507,
+        "16": 0.016491729766130447
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 35,
+      "corrupted_flank_length": 34
+    },
+    "3DGTA": {
+      "protein": "3DGTA",
+      "skipped": false,
+      "baseline_recovery": 0.7477136254310608,
+      "corrupted_recovery": 0.042762044817209244,
+      "layer_circuit_sizes": {
+        "4": 2,
+        "8": 49,
+        "12": 127,
+        "16": 17
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.5398737788200378,
+        "8": 0.5704876780509949,
+        "12": 0.5384822487831116,
+        "16": 0.5284971594810486
+      },
+      "layer_r0_values": {
+        "4": 0.34503862261772156,
+        "8": 0.0482441671192646,
+        "12": 0.058598585426807404,
+        "16": 0.10216264426708221
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 67,
+      "corrupted_flank_length": 66
+    },
+    "3FD3A": {
+      "protein": "3FD3A",
+      "error": "not enough values to unpack (expected 3, got 2)",
+      "skipped": true,
+      "reason": "processing_error"
+    },
+    "3HO7A": {
+      "protein": "3HO7A",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.3557_above_threshold",
+      "baseline_recovery": 0.8569396734237671,
+      "corrupted_recovery": 0.3557393550872803
+    },
+    "3LEWA": {
+      "protein": "3LEWA",
+      "skipped": false,
+      "baseline_recovery": 0.527384877204895,
+      "corrupted_recovery": 0.009947158396244049,
+      "layer_circuit_sizes": {
+        "4": 73,
+        "8": 24,
+        "12": 50,
+        "16": 117
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.37082335352897644,
+        "8": 0.4129987359046936,
+        "12": 0.37163570523262024,
+        "16": 0.3795967400074005
+      },
+      "layer_r0_values": {
+        "4": 0.009601037949323654,
+        "8": 0.009641305543482304,
+        "12": 0.011301666498184204,
+        "16": 0.009869236499071121
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 57,
+      "corrupted_flank_length": 56
+    },
+    "3OKPA": {
+      "protein": "3OKPA",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.1103_above_threshold",
+      "baseline_recovery": 0.8964409232139587,
+      "corrupted_recovery": 0.11033742129802704
+    },
+    "3QDLA": {
+      "protein": "3QDLA",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.1492_above_threshold",
+      "baseline_recovery": 0.7185279726982117,
+      "corrupted_recovery": 0.1492176353931427
+    },
+    "3T4LA": {
+      "protein": "3T4LA",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.4087_above_threshold",
+      "baseline_recovery": 1.0757622718811035,
+      "corrupted_recovery": 0.4086627960205078
+    },
+    "3WJPA": {
+      "protein": "3WJPA",
+      "skipped": false,
+      "baseline_recovery": 1.1112236976623535,
+      "corrupted_recovery": 0.036371421068906784,
+      "layer_circuit_sizes": {
+        "4": 9,
+        "8": 1,
+        "12": 42,
+        "16": 33
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.8230802416801453,
+        "8": 0.8163478374481201,
+        "12": 0.8153181672096252,
+        "16": 0.7817209959030151
+      },
+      "layer_r0_values": {
+        "4": 0.04091772437095642,
+        "8": 0.6660385727882385,
+        "12": 0.052220482379198074,
+        "16": 0.2372247576713562
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 59,
+      "corrupted_flank_length": 58
+    },
+    "4DM7A": {
+      "protein": "4DM7A",
+      "skipped": false,
+      "baseline_recovery": 0.9652304649353027,
+      "corrupted_recovery": 0.010828941129148006,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 1,
+        "12": 63,
+        "16": 209
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.9658755660057068,
+        "8": 0.8758957982063293,
+        "12": 0.6909300684928894,
+        "16": 0.676734447479248
+      },
+      "layer_r0_values": {
+        "4": 0.9622669816017151,
+        "8": 0.3452566862106323,
+        "12": 0.010125984437763691,
+        "16": 0.012077836319804192
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 36,
+      "corrupted_flank_length": 35
+    },
+    "4EHUA": {
+      "protein": "4EHUA",
+      "skipped": false,
+      "baseline_recovery": 0.6809021830558777,
+      "corrupted_recovery": 0.06450673937797546,
+      "layer_circuit_sizes": {
+        "4": 13,
+        "8": 6,
+        "12": 10,
+        "16": 55
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.4887428283691406,
+        "8": 0.48864802718162537,
+        "12": 0.48780357837677,
+        "16": 0.47974756360054016
+      },
+      "layer_r0_values": {
+        "4": 0.24253763258457184,
+        "8": 0.33755284547805786,
+        "12": 0.25465014576911926,
+        "16": 0.13953043520450592
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 34,
+      "corrupted_flank_length": 33
+    },
+    "4EX6A": {
+      "protein": "4EX6A",
+      "skipped": false,
+      "baseline_recovery": 0.8467617034912109,
+      "corrupted_recovery": 0.024155467748641968,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 1,
+        "12": 21,
+        "16": 67
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.7079786658287048,
+        "8": 0.6760798692703247,
+        "12": 0.6010313034057617,
+        "16": 0.5981264114379883
+      },
+      "layer_r0_values": {
+        "4": 0.6846588253974915,
+        "8": 0.5644639730453491,
+        "12": 0.12498681247234344,
+        "16": 0.04299824312329292
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 40,
+      "corrupted_flank_length": 39
+    },
+    "4EZIA": {
+      "protein": "4EZIA",
+      "skipped": false,
+      "baseline_recovery": 0.795741617679596,
+      "corrupted_recovery": 0.013264227658510208,
+      "layer_circuit_sizes": {
+        "4": 2,
+        "8": 7,
+        "12": 44,
+        "16": 256
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.5608446002006531,
+        "8": 0.5822495222091675,
+        "12": 0.5632044672966003,
+        "16": 0.5578691363334656
+      },
+      "layer_r0_values": {
+        "4": 0.19871826469898224,
+        "8": 0.011755484156310558,
+        "12": 0.012097167782485485,
+        "16": 0.012815039604902267
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 38,
+      "corrupted_flank_length": 37
+    },
+    "4G41A": {
+      "protein": "4G41A",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.2966_above_threshold",
+      "baseline_recovery": 0.9031453132629395,
+      "corrupted_recovery": 0.29657191038131714
+    },
+    "4HZIA": {
+      "protein": "4HZIA",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.1481_above_threshold",
+      "baseline_recovery": 0.8631970882415771,
+      "corrupted_recovery": 0.14813965559005737
+    },
+    "4ME3A": {
+      "protein": "4ME3A",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.3699_above_threshold",
+      "baseline_recovery": 1.0465335845947266,
+      "corrupted_recovery": 0.369910329580307
+    },
+    "4MFIA": {
+      "protein": "4MFIA",
+      "skipped": false,
+      "baseline_recovery": 0.6302307844161987,
+      "corrupted_recovery": 0.07958684861660004,
+      "layer_circuit_sizes": {
+        "4": 2,
+        "8": 1,
+        "12": 16,
+        "16": 17
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.45182424783706665,
+        "8": 0.5614832639694214,
+        "12": 0.44280943274497986,
+        "16": 0.4454883933067322
+      },
+      "layer_r0_values": {
+        "4": 0.40468141436576843,
+        "8": 0.5454705357551575,
+        "12": 0.06728328764438629,
+        "16": 0.1381327360868454
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 69,
+      "corrupted_flank_length": 68
+    },
+    "4N9WA": {
+      "protein": "4N9WA",
+      "skipped": false,
+      "baseline_recovery": 0.779076337814331,
+      "corrupted_recovery": 0.021236015483736992,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 47,
+        "12": 245,
+        "16": 78
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.6368645429611206,
+        "8": 0.5523474812507629,
+        "12": 0.5456874966621399,
+        "16": 0.5510502457618713
+      },
+      "layer_r0_values": {
+        "4": 0.6163795590400696,
+        "8": 0.190116286277771,
+        "12": 0.04151363670825958,
+        "16": 0.10404340922832489
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 61,
+      "corrupted_flank_length": 60
+    },
+    "4OY3A": {
+      "protein": "4OY3A",
+      "skipped": false,
+      "baseline_recovery": 0.5170344114303589,
+      "corrupted_recovery": 0.013689149171113968,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 52,
+        "12": 205,
+        "16": 332
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.607151210308075,
+        "8": 0.36331722140312195,
+        "12": 0.36399927735328674,
+        "16": 0.3620733618736267
+      },
+      "layer_r0_values": {
+        "4": 0.5791110992431641,
+        "8": 0.025012943893671036,
+        "12": 0.017184123396873474,
+        "16": 0.016654182225465775
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 39,
+      "corrupted_flank_length": 38
+    },
+    "4R6KA": {
+      "protein": "4R6KA",
+      "skipped": false,
+      "baseline_recovery": 0.6466585397720337,
+      "corrupted_recovery": 0.025583403185009956,
+      "layer_circuit_sizes": {
+        "4": 13,
+        "8": 1,
+        "12": 17,
+        "16": 2
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.4575236737728119,
+        "8": 0.5792250037193298,
+        "12": 0.457638680934906,
+        "16": 0.4533846378326416
+      },
+      "layer_r0_values": {
+        "4": 0.3449249863624573,
+        "8": 0.5763748288154602,
+        "12": 0.051901351660490036,
+        "16": 0.13623665273189545
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 60,
+      "corrupted_flank_length": 59
+    },
+    "4TL6A": {
+      "protein": "4TL6A",
+      "skipped": false,
+      "baseline_recovery": 0.8672394752502441,
+      "corrupted_recovery": 0.006885874550789595,
+      "layer_circuit_sizes": {
+        "4": 13,
+        "8": 7,
+        "12": 456,
+        "16": 617
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.6080331802368164,
+        "8": 0.6103381514549255,
+        "12": 0.6091172099113464,
+        "16": 0.6075509786605835
+      },
+      "layer_r0_values": {
+        "4": 0.008027725853025913,
+        "8": 0.5174592733383179,
+        "12": 0.0063446927815675735,
+        "16": 0.007345427758991718
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 50,
+      "corrupted_flank_length": 49
+    },
+    "4WY2A": {
+      "protein": "4WY2A",
+      "skipped": false,
+      "baseline_recovery": 0.650750458240509,
+      "corrupted_recovery": 0.07178483158349991,
+      "layer_circuit_sizes": {
+        "4": 18,
+        "8": 1,
+        "12": 20,
+        "16": 3
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.4573155343532562,
+        "8": 0.5777199268341064,
+        "12": 0.45742377638816833,
+        "16": 0.46801939606666565
+      },
+      "layer_r0_values": {
+        "4": 0.04207232594490051,
+        "8": 0.5636216402053833,
+        "12": 0.05323689058423042,
+        "16": 0.4095299243927002
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 45,
+      "corrupted_flank_length": 44
+    },
+    "5AB4A": {
+      "protein": "5AB4A",
+      "skipped": false,
+      "baseline_recovery": 1.0715681314468384,
+      "corrupted_recovery": 0.057156872004270554,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 23,
+        "12": 18,
+        "16": 59
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.9784870147705078,
+        "8": 0.7574383616447449,
+        "12": 0.7628819942474365,
+        "16": 0.7544440031051636
+      },
+      "layer_r0_values": {
+        "4": 0.9661521315574646,
+        "8": 0.2037680298089981,
+        "12": 0.1963508576154709,
+        "16": 0.04403147101402283
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 66,
+      "corrupted_flank_length": 65
+    },
+    "5AJGA": {
+      "protein": "5AJGA",
+      "skipped": true,
+      "reason": "corrupted_recovery_0.1139_above_threshold",
+      "baseline_recovery": 1.1175963878631592,
+      "corrupted_recovery": 0.11388453841209412
+    },
+    "5HEEA": {
+      "protein": "5HEEA",
+      "skipped": false,
+      "baseline_recovery": 1.046875,
+      "corrupted_recovery": 0.020710503682494164,
+      "layer_circuit_sizes": {
+        "4": 5,
+        "8": 12,
+        "12": 30,
+        "16": 22
+      },
+      "layer_circuit_recoveries": {
+        "4": 0.7471544146537781,
+        "8": 0.7385749816894531,
+        "12": 0.7341357469558716,
+        "16": 0.7432838082313538
+      },
+      "layer_r0_values": {
+        "4": 0.33303844928741455,
+        "8": 0.4407254755496979,
+        "12": 0.5546590685844421,
+        "16": 0.42926380038261414
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 33,
+      "corrupted_flank_length": 32
+    },
+    "5IVKA": {
+      "protein": "5IVKA",
+      "skipped": false,
+      "baseline_recovery": 1.189254641532898,
+      "corrupted_recovery": 0.013095117174088955,
+      "layer_circuit_sizes": {
+        "4": 1,
+        "8": 1,
+        "12": 137,
+        "16": 34
+      },
+      "layer_circuit_recoveries": {
+        "4": 1.1719191074371338,
+        "8": 0.9005758762359619,
+        "12": 0.8325076103210449,
+        "16": 0.8347208499908447
+      },
+      "layer_r0_values": {
+        "4": 1.1219156980514526,
+        "8": 0.8352554440498352,
+        "12": 0.022501733154058456,
+        "16": 0.014640530571341515
+      },
+      "target_recovery_percent": 0.7,
+      "selected_layers": [
+        4,
+        8,
+        12,
+        16
+      ],
+      "clean_flank_length": 67,
+      "corrupted_flank_length": 66
+    }
+  }
+}

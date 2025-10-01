@@ -465,7 +465,7 @@ target_recovery_percent = 0.7
 layer_circuit_sizes = {}
 layer_circuit_recoveries = {}
 
-for layer in main_layers[:4]:
+for layer in main_layers:
     k, recovery = find_k_for_recovery_threshold(
         layer, target_recovery_percent, all_effects_sae_ALS,
         clean_layer_caches, corr_layer_caches, clean_layer_errors, baseline_recovery=baseline_recovery, 
@@ -794,7 +794,7 @@ print(sorted(unique_latents))
 
 
 # %% create layer latent dict or load it from json file
-
+RESULTS_DIR = '../results'
 
 recompute_latent_dict = False # Set to True to force recomputation
 latent_dict_path = os.path.join(RESULTS_DIR, 'layer_latent_dicts', f'layer_latent_dict_{protein}_{target_recovery_percent:.2f}.json')
@@ -900,6 +900,32 @@ plt.show()
 # %%
 
 
+def to_flattened_id(layer_id: int, lat_id: int) -> int:
+    if layer_id % 4 != 0:
+        raise ValueError("layer_id must be a multiple of 4 (e.g., 4, 8, 12, ...)")
+    if not (0 <= lat_id < 4096):
+        raise ValueError("lat_id must be in [0, 4096)")
+    return ((layer_id // 4) - 1) * 4096 + lat_id
+
+list_of_desired_latents_2pkea = []
+for layer, latents in layer_latent_dict.items():
+    for lat_id in latents:
+        flattened_id = to_flattened_id(int(layer), int(lat_id))
+        list_of_desired_latents_2pkea.append(flattened_id)
+print(sorted(list_of_desired_latents_2pkea))
+
+# Save list of desired latents to pickle file
+import pickle
+with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/notebooks/domain_corr/metadata/list_of_desired_latents_2pkea.pkl', 'wb') as f:
+    pickle.dump(sorted(list_of_desired_latents_2pkea), f)
+
+
 # %%
+
+# %%
+import pickle
+with open('/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/notebooks/domain_corr/metadata/list_of_desired_latents.pkl', 'rb') as f:
+    list_of_desired_latents = pickle.load(f)
+print(list_of_desired_latents)
 
 # %%

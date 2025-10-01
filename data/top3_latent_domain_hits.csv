@@ -1,0 +1,31 @@
+LatentID,Family,pval_fmt,mean_in,mean_out,ratio_in_out,Family_ID
+8:488,Uncharacterised protein family UPF0227,1.45e-14,6.711,0.037,181.806,6500
+8:488,Uncharacterised protein family UPF0227/Esterase YqiA,1.45e-14,6.711,0.037,181.806,5423
+8:488,"Serine aminopeptidase, S33",1.57e-27,5.76,0.036,160.174,2487
+8:2677,FAD/NAD(P)-binding domain,2.04e-11,14.035,1.965,7.144,2515
+8:2677,"Short-chain dehydrogenase/reductase, conserved site",1.40e-12,11.592,1.966,5.895,536
+8:2677,Short-chain dehydrogenase/reductase SDR,2.06e-18,11.402,1.958,5.822,4311
+8:2775,Phosphopantetheine adenylyltransferase,4.63e-13,8.733,2.871,3.042,4213
+8:2775,"Mur ligase, central",3.32e-17,8.475,2.868,2.955,1983
+8:2775,"Mur ligase, C-terminal",3.32e-17,8.475,2.868,2.955,1284
+8:2166,"Large ribosomal subunit protein uL13, bacterial-type",3.59e-11,3.172,0.518,6.123,5008
+8:2166,Large ribosomal subunit protein uL13 superfamily,3.59e-11,3.172,0.518,6.123,9565
+8:2166,Large ribosomal subunit protein uL13,3.59e-11,3.172,0.518,6.123,5007
+12:2112,Alpha/Beta hydrolase fold,0.00e+00,11.973,0.204,58.672,9059
+12:2112,Alpha/beta hydrolase fold-1,1.16e-22,12.314,0.259,47.557,659
+12:2112,"Peptidase S10, serine carboxypeptidase",1.06e-14,11.646,0.267,43.644,4096
+12:3035,"PAC1/LIS1-like, WD-40 repeat",1.55e-16,10.343,0.633,16.346,10082
+12:3035,"WD40 repeat, conserved site",6.12e-20,10.226,0.628,16.278,448
+12:3035,WD40 repeat,9.26e-31,9.475,0.616,15.382,10047
+12:3536,"S-adenosyl-L-methionine-dependent methyltransferase, MraW, recognition domain superfamily",5.58e-12,12.41,1.148,10.808,8930
+12:3536,Ribosomal RNA small subunit methyltransferase H,5.58e-12,12.41,1.148,10.808,4433
+12:3536,S-adenosyl-L-methionine-dependent methyltransferase superfamily,0.00e+00,8.075,1.039,7.77,9063
+12:3794,"Ribosomal RNA adenine methylase transferase, N-terminal",7.80e-12,11.245,0.846,13.296,2374
+12:3794,Ribosomal RNA adenine methyltransferase KsgA/Erm,7.80e-12,11.245,0.846,13.296,4148
+12:3794,"Ribosomal RNA adenine methylase transferase, conserved site",7.80e-12,11.245,0.846,13.296,505
+12:1256,P-loop containing nucleoside triphosphate hydrolase,0.00e+00,9.336,1.221,7.645,9005
+12:1256,Small GTPase,3.54e-12,11.94,1.734,6.886,4162
+12:1256,GTP binding domain,2.26e-42,11.624,1.689,6.883,1458
+12:2797,HisA/PriA,1.43e-19,9.204,0.44,20.895,6510
+12:2797,Histidine biosynthesis protein,2.40e-35,8.825,0.429,20.595,5086
+12:2797,"HisA, bacterial",2.94e-14,9.158,0.445,20.583,5087
