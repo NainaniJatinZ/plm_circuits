@@ -62,9 +62,9 @@ _SAE_CACHE: Dict[int, object] = {}
 
 # %%
 
-all_acts_mean = torch.load("/project/pi_annagreen_umass_edu/bryn/plm_circuit_enrichment/data/summarized_acts_length_normalized.pt", weights_only=True) 
-all_acts_max = torch.load("/project/pi_annagreen_umass_edu/bryn/plm_circuit_enrichment/data/summarized_acts_max.pt", weights_only=True)
-all_acts_topq = torch.load("data/summarized_acts_top_q.pt", weights_only=True)
+all_acts_mean = torch.load("../../data/summarized_acts_length_normalized.pt", weights_only=True)
+all_acts_max = torch.load("../../data/summarized_acts_max.pt", weights_only=True)
+all_acts_topq = torch.load("../../data/summarized_acts_top_q.pt", weights_only=True)
 
 all_properties = torch.load("metadata/ptn_fam_tensor_nonzero.pt", weights_only=True)
 
@@ -81,13 +81,13 @@ all_acts_topq = all_acts_topq[:, subset_list]
 print(f"Number of latents: {len(subset_list)}")
 
 
-with open("/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dicts/layer_latent_dict_2PKEA_0.70.json", "r") as f:
+with open("../../results/layer_latent_dicts/layer_latent_dict_2PKEA_0.70.json", "r") as f:
     pkea_latents = json.load(f)
 
-with open("/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dicts/layer_latent_dict_MetXA_0.70.json", 'r') as file:
+with open("../../results/layer_latent_dicts/layer_latent_dict_MetXA_0.70.json", 'r') as file:
     metx_latents = json.load(file)
 
-with open("/work/pi_jensen_umass_edu/jnainani_umass_edu/plm_circuits/results/layer_latent_dicts/layer_latent_dict_Top2_0.70.json", 'r') as file:
+with open("../../results/layer_latent_dicts/layer_latent_dict_Top2_0.70.json", 'r') as file:
     top2_latents = json.load(file)
 
 
@@ -1124,12 +1124,16 @@ def analyze_latent_per_domain(
 
     idxs = np.where(ok)[0]
     if idxs.size == 0:
-        cols = ["domain_idx","entry_name","n_in","n_out","mwu_p","mwu_p_adj","mwu_auc"]
+        cols = ["domain_idx","entry_name","n_in","n_out","mwu_p","mwu_p_adj","mwu_auc","prevalence","summary_kind"]
         for mult in k_multipliers:
-            cols += [f"k_{mult}x","precision_{mult}x","lift_{mult}x","fisher_p_{mult}x","fisher_p_adj_{mult}x","or_topk_{mult}x"]
+            cols += [f"k_{mult}x",f"precision_{mult}x",f"lift_{mult}x",
+                     f"a_top_in_{mult}x",f"b_top_out_{mult}x",f"c_not_top_in_{mult}x",f"d_not_top_out_{mult}x",
+                     f"or_topk_{mult}x",f"fisher_p_{mult}x",f"fisher_p_adj_{mult}x"]
         for ptile in percentile_thresholds:
             cols += [f"k_p{int(ptile*100)}",f"precision_p{int(ptile*100)}",f"lift_p{int(ptile*100)}",
-                     f"fisher_p_p{int(ptile*100)}",f"fisher_p_adj_p{int(ptile*100)}",f"or_topk_p{int(ptile*100)}"]
+                     f"a_top_in_p{int(ptile*100)}",f"b_top_out_p{int(ptile*100)}",
+                     f"c_not_top_in_p{int(ptile*100)}",f"d_not_top_out_p{int(ptile*100)}",
+                     f"or_topk_p{int(ptile*100)}",f"fisher_p_p{int(ptile*100)}",f"fisher_p_adj_p{int(ptile*100)}"]
         return pd.DataFrame(columns=cols)
 
     # --- P1: MWU per domain (correct within this latent's tested domains) ---
@@ -1176,6 +1180,10 @@ def analyze_latent_per_domain(
                 f"k_{mult}x": k,
                 f"precision_{mult}x": tm["precision_k"],
                 f"lift_{mult}x": tm["lift_k"],
+                f"a_top_in_{mult}x": tm["a_top_in"],
+                f"b_top_out_{mult}x": tm["b_top_out"],
+                f"c_not_top_in_{mult}x": tm["c_not_top_in"],
+                f"d_not_top_out_{mult}x": tm["d_not_top_out"],
                 f"or_topk_{mult}x": tm["or_topk"],
                 f"fisher_p_{mult}x": tm["fisher_p_topk"],
             })
@@ -1189,6 +1197,10 @@ def analyze_latent_per_domain(
                 f"k_p{int(ptile*100)}": k,
                 f"precision_p{int(ptile*100)}": tm["precision_k"],
                 f"lift_p{int(ptile*100)}": tm["lift_k"],
+                f"a_top_in_p{int(ptile*100)}": tm["a_top_in"],
+                f"b_top_out_p{int(ptile*100)}": tm["b_top_out"],
+                f"c_not_top_in_p{int(ptile*100)}": tm["c_not_top_in"],
+                f"d_not_top_out_p{int(ptile*100)}": tm["d_not_top_out"],
                 f"or_topk_p{int(ptile*100)}": tm["or_topk"],
                 f"fisher_p_p{int(ptile*100)}": tm["fisher_p_topk"],
             })
