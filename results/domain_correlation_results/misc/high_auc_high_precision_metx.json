@@ -1,0 +1,526 @@
+{
+  "4": {
+    "798": [
+      {
+        "domain_idx": 6262,
+        "ipr_id": "IPR019981",
+        "entry_name": "Small ribosomal subunit protein uS11, bacterial-type"
+      }
+    ]
+  },
+  "8": {
+    "488": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ]
+  },
+  "12": {
+    "798": [
+      {
+        "domain_idx": 1206,
+        "ipr_id": "IPR003593",
+        "entry_name": "AAA+ ATPase domain"
+      }
+    ],
+    "899": [
+      {
+        "domain_idx": 9063,
+        "ipr_id": "IPR029063",
+        "entry_name": "S-adenosyl-L-methionine-dependent methyltransferase superfamily"
+      }
+    ],
+    "904": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      },
+      {
+        "domain_idx": 9005,
+        "ipr_id": "IPR027417",
+        "entry_name": "P-loop containing nucleoside triphosphate hydrolase"
+      }
+    ],
+    "1121": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "1256": [
+      {
+        "domain_idx": 9005,
+        "ipr_id": "IPR027417",
+        "entry_name": "P-loop containing nucleoside triphosphate hydrolase"
+      }
+    ],
+    "1377": [
+      {
+        "domain_idx": 9235,
+        "ipr_id": "IPR036188",
+        "entry_name": "FAD/NAD(P)-binding domain superfamily"
+      },
+      {
+        "domain_idx": 9278,
+        "ipr_id": "IPR036291",
+        "entry_name": "NAD(P)-binding domain superfamily"
+      }
+    ],
+    "2112": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "2477": [
+      {
+        "domain_idx": 8787,
+        "ipr_id": "IPR015943",
+        "entry_name": "WD40/YVTN repeat-like-containing domain superfamily"
+      }
+    ],
+    "2797": [
+      {
+        "domain_idx": 5086,
+        "ipr_id": "IPR006062",
+        "entry_name": "Histidine biosynthesis protein"
+      }
+    ],
+    "3035": [
+      {
+        "domain_idx": 10047,
+        "ipr_id": "IPR001680",
+        "entry_name": "WD40 repeat"
+      }
+    ],
+    "3536": [
+      {
+        "domain_idx": 9063,
+        "ipr_id": "IPR029063",
+        "entry_name": "S-adenosyl-L-methionine-dependent methyltransferase superfamily"
+      }
+    ],
+    "3794": [
+      {
+        "domain_idx": 9063,
+        "ipr_id": "IPR029063",
+        "entry_name": "S-adenosyl-L-methionine-dependent methyltransferase superfamily"
+      }
+    ],
+    "3960": [
+      {
+        "domain_idx": 3998,
+        "ipr_id": "IPR001128",
+        "entry_name": "Cytochrome P450"
+      }
+    ],
+    "4019": [
+      {
+        "domain_idx": 9339,
+        "ipr_id": "IPR036412",
+        "entry_name": "HAD-like superfamily"
+      }
+    ]
+  },
+  "16": {
+    "391": [
+      {
+        "domain_idx": 9063,
+        "ipr_id": "IPR029063",
+        "entry_name": "S-adenosyl-L-methionine-dependent methyltransferase superfamily"
+      }
+    ],
+    "708": [
+      {
+        "domain_idx": 8787,
+        "ipr_id": "IPR015943",
+        "entry_name": "WD40/YVTN repeat-like-containing domain superfamily"
+      }
+    ],
+    "1236": [
+      {
+        "domain_idx": 9063,
+        "ipr_id": "IPR029063",
+        "entry_name": "S-adenosyl-L-methionine-dependent methyltransferase superfamily"
+      }
+    ],
+    "1504": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "1728": [
+      {
+        "domain_idx": 10045,
+        "ipr_id": "IPR001611",
+        "entry_name": "Leucine-rich repeat"
+      }
+    ],
+    "1788": [
+      {
+        "domain_idx": 8698,
+        "ipr_id": "IPR011990",
+        "entry_name": "Tetratricopeptide-like helical domain superfamily"
+      }
+    ],
+    "1836": [
+      {
+        "domain_idx": 767,
+        "ipr_id": "IPR000719",
+        "entry_name": "Protein kinase domain"
+      }
+    ],
+    "1880": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "2175": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "2341": [
+      {
+        "domain_idx": 8740,
+        "ipr_id": "IPR013785",
+        "entry_name": "Aldolase-type TIM barrel"
+      }
+    ],
+    "2450": [
+      {
+        "domain_idx": 9263,
+        "ipr_id": "IPR036259",
+        "entry_name": "MFS transporter superfamily"
+      }
+    ],
+    "2536": [
+      {
+        "domain_idx": 1194,
+        "ipr_id": "IPR003439",
+        "entry_name": "ABC transporter-like, ATP-binding domain"
+      }
+    ],
+    "2836": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "3092": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "3994": [
+      {
+        "domain_idx": 1206,
+        "ipr_id": "IPR003593",
+        "entry_name": "AAA+ ATPase domain"
+      }
+    ]
+  },
+  "20": {
+    "136": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "441": [
+      {
+        "domain_idx": 9076,
+        "ipr_id": "IPR032675",
+        "entry_name": "Leucine-rich repeat domain superfamily"
+      }
+    ],
+    "878": [
+      {
+        "domain_idx": 767,
+        "ipr_id": "IPR000719",
+        "entry_name": "Protein kinase domain"
+      }
+    ],
+    "930": [
+      {
+        "domain_idx": 9076,
+        "ipr_id": "IPR032675",
+        "entry_name": "Leucine-rich repeat domain superfamily"
+      }
+    ],
+    "1505": [
+      {
+        "domain_idx": 9005,
+        "ipr_id": "IPR027417",
+        "entry_name": "P-loop containing nucleoside triphosphate hydrolase"
+      }
+    ],
+    "1763": [
+      {
+        "domain_idx": 1206,
+        "ipr_id": "IPR003593",
+        "entry_name": "AAA+ ATPase domain"
+      }
+    ],
+    "1960": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "2500": [
+      {
+        "domain_idx": 8787,
+        "ipr_id": "IPR015943",
+        "entry_name": "WD40/YVTN repeat-like-containing domain superfamily"
+      }
+    ],
+    "3410": [
+      {
+        "domain_idx": 8640,
+        "ipr_id": "IPR011004",
+        "entry_name": "Trimeric LpxA-like superfamily"
+      }
+    ],
+    "3567": [
+      {
+        "domain_idx": 9076,
+        "ipr_id": "IPR032675",
+        "entry_name": "Leucine-rich repeat domain superfamily"
+      }
+    ],
+    "3615": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "3616": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "3775": [
+      {
+        "domain_idx": 10047,
+        "ipr_id": "IPR001680",
+        "entry_name": "WD40 repeat"
+      }
+    ],
+    "4060": [
+      {
+        "domain_idx": 10049,
+        "ipr_id": "IPR002110",
+        "entry_name": "Ankyrin repeat"
+      }
+    ]
+  },
+  "24": {
+    "41": [
+      {
+        "domain_idx": 9263,
+        "ipr_id": "IPR036259",
+        "entry_name": "MFS transporter superfamily"
+      }
+    ],
+    "231": [
+      {
+        "domain_idx": 8787,
+        "ipr_id": "IPR015943",
+        "entry_name": "WD40/YVTN repeat-like-containing domain superfamily"
+      }
+    ],
+    "471": [
+      {
+        "domain_idx": 9050,
+        "ipr_id": "IPR029044",
+        "entry_name": "Nucleotide-diphospho-sugar transferases"
+      }
+    ],
+    "491": [
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      }
+    ],
+    "731": [
+      {
+        "domain_idx": 8640,
+        "ipr_id": "IPR011004",
+        "entry_name": "Trimeric LpxA-like superfamily"
+      }
+    ],
+    "950": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      },
+      {
+        "domain_idx": 9063,
+        "ipr_id": "IPR029063",
+        "entry_name": "S-adenosyl-L-methionine-dependent methyltransferase superfamily"
+      }
+    ],
+    "1407": [
+      {
+        "domain_idx": 1591,
+        "ipr_id": "IPR007110",
+        "entry_name": "Immunoglobulin-like domain"
+      }
+    ],
+    "1427": [
+      {
+        "domain_idx": 9076,
+        "ipr_id": "IPR032675",
+        "entry_name": "Leucine-rich repeat domain superfamily"
+      },
+      {
+        "domain_idx": 8740,
+        "ipr_id": "IPR013785",
+        "entry_name": "Aldolase-type TIM barrel"
+      }
+    ],
+    "1822": [
+      {
+        "domain_idx": 767,
+        "ipr_id": "IPR000719",
+        "entry_name": "Protein kinase domain"
+      }
+    ],
+    "1858": [
+      {
+        "domain_idx": 9076,
+        "ipr_id": "IPR032675",
+        "entry_name": "Leucine-rich repeat domain superfamily"
+      }
+    ],
+    "1865": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "1909": [
+      {
+        "domain_idx": 1206,
+        "ipr_id": "IPR003593",
+        "entry_name": "AAA+ ATPase domain"
+      }
+    ],
+    "2398": [
+      {
+        "domain_idx": 10049,
+        "ipr_id": "IPR002110",
+        "entry_name": "Ankyrin repeat"
+      }
+    ],
+    "2586": [
+      {
+        "domain_idx": 8640,
+        "ipr_id": "IPR011004",
+        "entry_name": "Trimeric LpxA-like superfamily"
+      }
+    ],
+    "2632": [
+      {
+        "domain_idx": 9076,
+        "ipr_id": "IPR032675",
+        "entry_name": "Leucine-rich repeat domain superfamily"
+      }
+    ],
+    "2848": [
+      {
+        "domain_idx": 767,
+        "ipr_id": "IPR000719",
+        "entry_name": "Protein kinase domain"
+      }
+    ],
+    "3066": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ],
+    "3264": [
+      {
+        "domain_idx": 1206,
+        "ipr_id": "IPR003593",
+        "entry_name": "AAA+ ATPase domain"
+      }
+    ],
+    "3302": [
+      {
+        "domain_idx": 8697,
+        "ipr_id": "IPR011989",
+        "entry_name": "Armadillo-like helical"
+      }
+    ],
+    "3707": [
+      {
+        "domain_idx": 8640,
+        "ipr_id": "IPR011004",
+        "entry_name": "Trimeric LpxA-like superfamily"
+      }
+    ],
+    "3946": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "3996": [
+      {
+        "domain_idx": 9005,
+        "ipr_id": "IPR027417",
+        "entry_name": "P-loop containing nucleoside triphosphate hydrolase"
+      }
+    ]
+  },
+  "28": {
+    "213": [
+      {
+        "domain_idx": 8740,
+        "ipr_id": "IPR013785",
+        "entry_name": "Aldolase-type TIM barrel"
+      }
+    ],
+    "1066": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "1879": [
+      {
+        "domain_idx": 9059,
+        "ipr_id": "IPR029058",
+        "entry_name": "Alpha/Beta hydrolase fold"
+      }
+    ]
+  }
+}

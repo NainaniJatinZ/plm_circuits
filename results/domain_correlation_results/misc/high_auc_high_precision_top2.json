@@ -1,0 +1,159 @@
+{
+  "12": {
+    "1204": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "1796": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "2474": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      }
+    ],
+    "3943": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ]
+  },
+  "16": {
+    "631": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "1166": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "1353": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ]
+  },
+  "20": {
+    "594": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "1108": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "1966": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      }
+    ],
+    "2311": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "3952": [
+      {
+        "domain_idx": 3781,
+        "ipr_id": "IPR000266",
+        "entry_name": "Small ribosomal subunit protein uS17"
+      }
+    ],
+    "3972": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ]
+  },
+  "24": {
+    "2053": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "2746": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ],
+    "2998": [
+      {
+        "domain_idx": 9050,
+        "ipr_id": "IPR029044",
+        "entry_name": "Nucleotide-diphospho-sugar transferases"
+      }
+    ],
+    "3633": [
+      {
+        "domain_idx": 9061,
+        "ipr_id": "IPR029061",
+        "entry_name": "Thiamin diphosphate-binding fold"
+      }
+    ],
+    "3857": [
+      {
+        "domain_idx": 10082,
+        "ipr_id": "IPR020472",
+        "entry_name": "PAC1/LIS1-like, WD-40 repeat"
+      }
+    ]
+  },
+  "28": {
+    "1892": [
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "2952": [
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      }
+    ],
+    "3447": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      }
+    ]
+  }
+}

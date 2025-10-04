@@ -1,0 +1,1090 @@
+{
+  "4": {
+    "2112": [
+      {
+        "domain_idx": 4954,
+        "ipr_id": "IPR005679",
+        "entry_name": "Ribosomal protein uS12, bacterial-type"
+      }
+    ],
+    "2511": [
+      {
+        "domain_idx": 6262,
+        "ipr_id": "IPR019981",
+        "entry_name": "Small ribosomal subunit protein uS11, bacterial-type"
+      }
+    ]
+  },
+  "12": {
+    "211": [
+      {
+        "domain_idx": 897,
+        "ipr_id": "IPR001356",
+        "entry_name": "Homeodomain"
+      }
+    ],
+    "803": [
+      {
+        "domain_idx": 10082,
+        "ipr_id": "IPR020472",
+        "entry_name": "PAC1/LIS1-like, WD-40 repeat"
+      }
+    ],
+    "1082": [
+      {
+        "domain_idx": 1284,
+        "ipr_id": "IPR004101",
+        "entry_name": "Mur ligase, C-terminal"
+      }
+    ],
+    "1204": [
+      {
+        "domain_idx": 1283,
+        "ipr_id": "IPR004100",
+        "entry_name": "ATPase, F1/V1/A1 complex, alpha/beta subunit, N-terminal domain"
+      },
+      {
+        "domain_idx": 751,
+        "ipr_id": "IPR000640",
+        "entry_name": "Elongation factor EFG, domain V-like"
+      },
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      },
+      {
+        "domain_idx": 1276,
+        "ipr_id": "IPR004087",
+        "entry_name": "K Homology domain"
+      }
+    ],
+    "1796": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 7657,
+        "ipr_id": "IPR050054",
+        "entry_name": "Uracil phosphoribosyltransferase/Adenine phosphoribosyltransferase"
+      }
+    ],
+    "2472": [
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      },
+      {
+        "domain_idx": 4383,
+        "ipr_id": "IPR002677",
+        "entry_name": "Large ribosomal subunit protein bL32"
+      },
+      {
+        "domain_idx": 9204,
+        "ipr_id": "IPR036121",
+        "entry_name": "ATPase, F1/V1/A1 complex, alpha/beta subunit, N-terminal domain superfamily"
+      }
+    ],
+    "2474": [
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      },
+      {
+        "domain_idx": 787,
+        "ipr_id": "IPR000836",
+        "entry_name": "Phosphoribosyltransferase domain"
+      }
+    ],
+    "3557": [
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "3751": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "3943": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ]
+  },
+  "16": {
+    "631": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      }
+    ],
+    "737": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 548,
+        "ipr_id": "IPR022631",
+        "entry_name": "S-adenosylmethionine synthetase, conserved site"
+      },
+      {
+        "domain_idx": 9054,
+        "ipr_id": "IPR029048",
+        "entry_name": "Heat shock protein 70kD, C-terminal domain superfamily"
+      },
+      {
+        "domain_idx": 630,
+        "ipr_id": "IPR047863",
+        "entry_name": "Small ribosomal subunit protein uS8, conserved site"
+      },
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 1787,
+        "ipr_id": "IPR010918",
+        "entry_name": "PurM-like, C-terminal domain"
+      }
+    ],
+    "811": [
+      {
+        "domain_idx": 8724,
+        "ipr_id": "IPR013320",
+        "entry_name": "Concanavalin A-like lectin/glucanase domain superfamily"
+      },
+      {
+        "domain_idx": 8588,
+        "ipr_id": "IPR009001",
+        "entry_name": "Translation elongation factor EF1A/initiation factor IF2gamma, C-terminal"
+      },
+      {
+        "domain_idx": 330,
+        "ipr_id": "IPR018079",
+        "entry_name": "Small ribosomal subunit protein uS4, conserved site"
+      }
+    ],
+    "1166": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      }
+    ],
+    "1280": [
+      {
+        "domain_idx": 9054,
+        "ipr_id": "IPR029048",
+        "entry_name": "Heat shock protein 70kD, C-terminal domain superfamily"
+      }
+    ],
+    "1353": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "1388": [
+      {
+        "domain_idx": 835,
+        "ipr_id": "IPR001048",
+        "entry_name": "Aspartate/glutamate/uridylate kinase"
+      }
+    ],
+    "1597": [
+      {
+        "domain_idx": 782,
+        "ipr_id": "IPR000795",
+        "entry_name": "Translational (tr)-type GTP-binding domain"
+      },
+      {
+        "domain_idx": 1458,
+        "ipr_id": "IPR006073",
+        "entry_name": "GTP binding domain"
+      },
+      {
+        "domain_idx": 881,
+        "ipr_id": "IPR001247",
+        "entry_name": "Exoribonuclease, phosphorolytic domain 1"
+      }
+    ],
+    "2223": [
+      {
+        "domain_idx": 897,
+        "ipr_id": "IPR001356",
+        "entry_name": "Homeodomain"
+      }
+    ],
+    "2412": [
+      {
+        "domain_idx": 751,
+        "ipr_id": "IPR000640",
+        "entry_name": "Elongation factor EFG, domain V-like"
+      },
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      },
+      {
+        "domain_idx": 8588,
+        "ipr_id": "IPR009001",
+        "entry_name": "Translation elongation factor EF1A/initiation factor IF2gamma, C-terminal"
+      }
+    ],
+    "3297": [
+      {
+        "domain_idx": 4954,
+        "ipr_id": "IPR005679",
+        "entry_name": "Ribosomal protein uS12, bacterial-type"
+      },
+      {
+        "domain_idx": 474,
+        "ipr_id": "IPR019972",
+        "entry_name": "Large ribosomal subunit protein uL14, conserved site"
+      },
+      {
+        "domain_idx": 339,
+        "ipr_id": "IPR018102",
+        "entry_name": "Small ribosomal subunit protein uS11, conserved site"
+      }
+    ],
+    "3666": [
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ]
+  },
+  "20": {
+    "86": [
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "187": [
+      {
+        "domain_idx": 507,
+        "ipr_id": "IPR020606",
+        "entry_name": "Small ribosomal subunit protein uS7, conserved site"
+      }
+    ],
+    "432": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 5086,
+        "ipr_id": "IPR006062",
+        "entry_name": "Histidine biosynthesis protein"
+      },
+      {
+        "domain_idx": 9035,
+        "ipr_id": "IPR029017",
+        "entry_name": "Enolase-like, N-terminal"
+      }
+    ],
+    "594": [
+      {
+        "domain_idx": 2275,
+        "ipr_id": "IPR018485",
+        "entry_name": "Carbohydrate kinase FGGY, C-terminal"
+      }
+    ],
+    "659": [
+      {
+        "domain_idx": 958,
+        "ipr_id": "IPR001750",
+        "entry_name": "NADH:quinone oxidoreductase/Mrp antiporter, transmembrane domain"
+      }
+    ],
+    "722": [
+      {
+        "domain_idx": 8766,
+        "ipr_id": "IPR014756",
+        "entry_name": "Immunoglobulin E-set"
+      },
+      {
+        "domain_idx": 782,
+        "ipr_id": "IPR000795",
+        "entry_name": "Translational (tr)-type GTP-binding domain"
+      },
+      {
+        "domain_idx": 1327,
+        "ipr_id": "IPR004365",
+        "entry_name": "OB-fold nucleic acid binding domain, AA-tRNA synthetase-type"
+      }
+    ],
+    "754": [
+      {
+        "domain_idx": 1210,
+        "ipr_id": "IPR003599",
+        "entry_name": "Immunoglobulin domain subtype"
+      },
+      {
+        "domain_idx": 10082,
+        "ipr_id": "IPR020472",
+        "entry_name": "PAC1/LIS1-like, WD-40 repeat"
+      }
+    ],
+    "789": [
+      {
+        "domain_idx": 6262,
+        "ipr_id": "IPR019981",
+        "entry_name": "Small ribosomal subunit protein uS11, bacterial-type"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      },
+      {
+        "domain_idx": 1787,
+        "ipr_id": "IPR010918",
+        "entry_name": "PurM-like, C-terminal domain"
+      },
+      {
+        "domain_idx": 520,
+        "ipr_id": "IPR020809",
+        "entry_name": "Enolase, conserved site"
+      },
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      }
+    ],
+    "865": [
+      {
+        "domain_idx": 292,
+        "ipr_id": "IPR017871",
+        "entry_name": "ABC transporter-like, conserved site"
+      },
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      },
+      {
+        "domain_idx": 1284,
+        "ipr_id": "IPR004101",
+        "entry_name": "Mur ligase, C-terminal"
+      },
+      {
+        "domain_idx": 8588,
+        "ipr_id": "IPR009001",
+        "entry_name": "Translation elongation factor EF1A/initiation factor IF2gamma, C-terminal"
+      },
+      {
+        "domain_idx": 9097,
+        "ipr_id": "IPR035647",
+        "entry_name": "EF-G domain III/V-like"
+      },
+      {
+        "domain_idx": 3924,
+        "ipr_id": "IPR000850",
+        "entry_name": "Adenylate kinase/UMP-CMP kinase"
+      },
+      {
+        "domain_idx": 330,
+        "ipr_id": "IPR018079",
+        "entry_name": "Small ribosomal subunit protein uS4, conserved site"
+      }
+    ],
+    "1108": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      },
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "1799": [
+      {
+        "domain_idx": 630,
+        "ipr_id": "IPR047863",
+        "entry_name": "Small ribosomal subunit protein uS8, conserved site"
+      }
+    ],
+    "1807": [
+      {
+        "domain_idx": 897,
+        "ipr_id": "IPR001356",
+        "entry_name": "Homeodomain"
+      }
+    ],
+    "1966": [
+      {
+        "domain_idx": 3924,
+        "ipr_id": "IPR000850",
+        "entry_name": "Adenylate kinase/UMP-CMP kinase"
+      },
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      }
+    ],
+    "1975": [
+      {
+        "domain_idx": 8654,
+        "ipr_id": "IPR011032",
+        "entry_name": "GroES-like superfamily"
+      },
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      }
+    ],
+    "2261": [
+      {
+        "domain_idx": 1327,
+        "ipr_id": "IPR004365",
+        "entry_name": "OB-fold nucleic acid binding domain, AA-tRNA synthetase-type"
+      },
+      {
+        "domain_idx": 520,
+        "ipr_id": "IPR020809",
+        "entry_name": "Enolase, conserved site"
+      }
+    ],
+    "2311": [
+      {
+        "domain_idx": 881,
+        "ipr_id": "IPR001247",
+        "entry_name": "Exoribonuclease, phosphorolytic domain 1"
+      },
+      {
+        "domain_idx": 751,
+        "ipr_id": "IPR000640",
+        "entry_name": "Elongation factor EFG, domain V-like"
+      }
+    ],
+    "2324": [
+      {
+        "domain_idx": 9229,
+        "ipr_id": "IPR036179",
+        "entry_name": "Immunoglobulin-like domain superfamily"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "2366": [
+      {
+        "domain_idx": 376,
+        "ipr_id": "IPR018253",
+        "entry_name": "DnaJ domain, conserved site"
+      },
+      {
+        "domain_idx": 8992,
+        "ipr_id": "IPR027304",
+        "entry_name": "Trigger factor/SurA domain superfamily"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "2495": [
+      {
+        "domain_idx": 306,
+        "ipr_id": "IPR017970",
+        "entry_name": "Homeobox, conserved site"
+      }
+    ],
+    "2738": [
+      {
+        "domain_idx": 307,
+        "ipr_id": "IPR017972",
+        "entry_name": "Cytochrome P450, conserved site"
+      },
+      {
+        "domain_idx": 636,
+        "ipr_id": "IPR049704",
+        "entry_name": "Aminotransferases class-III pyridoxal-phosphate attachment site"
+      },
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 4180,
+        "ipr_id": "IPR001865",
+        "entry_name": "Small ribosomal subunit protein uS2"
+      }
+    ],
+    "2761": [
+      {
+        "domain_idx": 306,
+        "ipr_id": "IPR017970",
+        "entry_name": "Homeobox, conserved site"
+      }
+    ],
+    "3396": [
+      {
+        "domain_idx": 4954,
+        "ipr_id": "IPR005679",
+        "entry_name": "Ribosomal protein uS12, bacterial-type"
+      }
+    ],
+    "3462": [
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 5078,
+        "ipr_id": "IPR006032",
+        "entry_name": "Small ribosomal subunit protein uS12"
+      },
+      {
+        "domain_idx": 4210,
+        "ipr_id": "IPR001971",
+        "entry_name": "Small ribosomal subunit protein uS11"
+      }
+    ],
+    "3490": [
+      {
+        "domain_idx": 10007,
+        "ipr_id": "IPR046357",
+        "entry_name": "Peptidyl-prolyl cis-trans isomerase domain superfamily"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "3597": [
+      {
+        "domain_idx": 520,
+        "ipr_id": "IPR020809",
+        "entry_name": "Enolase, conserved site"
+      }
+    ],
+    "3732": [
+      {
+        "domain_idx": 6262,
+        "ipr_id": "IPR019981",
+        "entry_name": "Small ribosomal subunit protein uS11, bacterial-type"
+      }
+    ],
+    "3787": [
+      {
+        "domain_idx": 9402,
+        "ipr_id": "IPR036565",
+        "entry_name": "Mur-like, catalytic domain superfamily"
+      },
+      {
+        "domain_idx": 5086,
+        "ipr_id": "IPR006062",
+        "entry_name": "Histidine biosynthesis protein"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "3952": [
+      {
+        "domain_idx": 5078,
+        "ipr_id": "IPR006032",
+        "entry_name": "Small ribosomal subunit protein uS12"
+      }
+    ],
+    "3954": [
+      {
+        "domain_idx": 8787,
+        "ipr_id": "IPR015943",
+        "entry_name": "WD40/YVTN repeat-like-containing domain superfamily"
+      },
+      {
+        "domain_idx": 6262,
+        "ipr_id": "IPR019981",
+        "entry_name": "Small ribosomal subunit protein uS11, bacterial-type"
+      },
+      {
+        "domain_idx": 9541,
+        "ipr_id": "IPR036866",
+        "entry_name": "Ribonuclease Z/Hydroxyacylglutathione hydrolase-like"
+      },
+      {
+        "domain_idx": 354,
+        "ipr_id": "IPR018181",
+        "entry_name": "Heat shock protein 70, conserved site"
+      },
+      {
+        "domain_idx": 2046,
+        "ipr_id": "IPR013766",
+        "entry_name": "Thioredoxin domain"
+      }
+    ],
+    "3972": [
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      },
+      {
+        "domain_idx": 7015,
+        "ipr_id": "IPR030689",
+        "entry_name": "Cytochrome b"
+      }
+    ]
+  },
+  "24": {
+    "180": [
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      },
+      {
+        "domain_idx": 5078,
+        "ipr_id": "IPR006032",
+        "entry_name": "Small ribosomal subunit protein uS12"
+      }
+    ],
+    "972": [
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      },
+      {
+        "domain_idx": 307,
+        "ipr_id": "IPR017972",
+        "entry_name": "Cytochrome P450, conserved site"
+      }
+    ],
+    "996": [
+      {
+        "domain_idx": 8739,
+        "ipr_id": "IPR013783",
+        "entry_name": "Immunoglobulin-like fold"
+      },
+      {
+        "domain_idx": 10082,
+        "ipr_id": "IPR020472",
+        "entry_name": "PAC1/LIS1-like, WD-40 repeat"
+      }
+    ],
+    "1013": [
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      },
+      {
+        "domain_idx": 1273,
+        "ipr_id": "IPR004044",
+        "entry_name": "K Homology domain, type 2"
+      }
+    ],
+    "1149": [
+      {
+        "domain_idx": 8836,
+        "ipr_id": "IPR016185",
+        "entry_name": "Pre-ATP-grasp domain superfamily"
+      },
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      },
+      {
+        "domain_idx": 8598,
+        "ipr_id": "IPR009019",
+        "entry_name": "K homology domain superfamily, prokaryotic type"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "1399": [
+      {
+        "domain_idx": 8610,
+        "ipr_id": "IPR009057",
+        "entry_name": "Homedomain-like superfamily"
+      },
+      {
+        "domain_idx": 9434,
+        "ipr_id": "IPR036638",
+        "entry_name": "Helix-loop-helix DNA-binding domain superfamily"
+      }
+    ],
+    "2053": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 1194,
+        "ipr_id": "IPR003439",
+        "entry_name": "ABC transporter-like, ATP-binding domain"
+      },
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      }
+    ],
+    "2609": [
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      },
+      {
+        "domain_idx": 339,
+        "ipr_id": "IPR018102",
+        "entry_name": "Small ribosomal subunit protein uS11, conserved site"
+      }
+    ],
+    "2739": [
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "2746": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      }
+    ],
+    "2784": [
+      {
+        "domain_idx": 9559,
+        "ipr_id": "IPR036890",
+        "entry_name": "Histidine kinase/HSP90-like ATPase superfamily"
+      },
+      {
+        "domain_idx": 1259,
+        "ipr_id": "IPR003959",
+        "entry_name": "ATPase, AAA-type, core"
+      }
+    ],
+    "2998": [
+      {
+        "domain_idx": 8640,
+        "ipr_id": "IPR011004",
+        "entry_name": "Trimeric LpxA-like superfamily"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 1601,
+        "ipr_id": "IPR007197",
+        "entry_name": "Radical SAM"
+      }
+    ],
+    "3052": [
+      {
+        "domain_idx": 4968,
+        "ipr_id": "IPR005717",
+        "entry_name": "Small ribosomal subunit protein uS7, bacterial/organellar-type"
+      }
+    ],
+    "3117": [
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ],
+    "3358": [
+      {
+        "domain_idx": 4954,
+        "ipr_id": "IPR005679",
+        "entry_name": "Ribosomal protein uS12, bacterial-type"
+      }
+    ],
+    "3439": [
+      {
+        "domain_idx": 881,
+        "ipr_id": "IPR001247",
+        "entry_name": "Exoribonuclease, phosphorolytic domain 1"
+      }
+    ],
+    "3633": [
+      {
+        "domain_idx": 9402,
+        "ipr_id": "IPR036565",
+        "entry_name": "Mur-like, catalytic domain superfamily"
+      }
+    ],
+    "3857": [
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 2091,
+        "ipr_id": "IPR014014",
+        "entry_name": "RNA helicase, DEAD-box type, Q motif"
+      }
+    ]
+  },
+  "28": {
+    "169": [
+      {
+        "domain_idx": 4180,
+        "ipr_id": "IPR001865",
+        "entry_name": "Small ribosomal subunit protein uS2"
+      }
+    ],
+    "487": [
+      {
+        "domain_idx": 3924,
+        "ipr_id": "IPR000850",
+        "entry_name": "Adenylate kinase/UMP-CMP kinase"
+      },
+      {
+        "domain_idx": 1284,
+        "ipr_id": "IPR004101",
+        "entry_name": "Mur ligase, C-terminal"
+      },
+      {
+        "domain_idx": 8992,
+        "ipr_id": "IPR027304",
+        "entry_name": "Trigger factor/SurA domain superfamily"
+      }
+    ],
+    "662": [
+      {
+        "domain_idx": 8771,
+        "ipr_id": "IPR015422",
+        "entry_name": "Pyridoxal phosphate-dependent transferase, small domain"
+      },
+      {
+        "domain_idx": 781,
+        "ipr_id": "IPR000793",
+        "entry_name": "ATP synthase, alpha subunit, C-terminal"
+      }
+    ],
+    "730": [
+      {
+        "domain_idx": 8588,
+        "ipr_id": "IPR009001",
+        "entry_name": "Translation elongation factor EF1A/initiation factor IF2gamma, C-terminal"
+      },
+      {
+        "domain_idx": 3860,
+        "ipr_id": "IPR000630",
+        "entry_name": "Small ribosomal subunit protein uS8"
+      },
+      {
+        "domain_idx": 8864,
+        "ipr_id": "IPR020103",
+        "entry_name": "Pseudouridine synthase, catalytic domain superfamily"
+      }
+    ],
+    "817": [
+      {
+        "domain_idx": 5004,
+        "ipr_id": "IPR005814",
+        "entry_name": "Aminotransferase class-III"
+      },
+      {
+        "domain_idx": 9039,
+        "ipr_id": "IPR029026",
+        "entry_name": "tRNA (guanine-N1-)-methyltransferase, N-terminal"
+      }
+    ],
+    "1422": [
+      {
+        "domain_idx": 2169,
+        "ipr_id": "IPR015590",
+        "entry_name": "Aldehyde dehydrogenase domain"
+      },
+      {
+        "domain_idx": 1787,
+        "ipr_id": "IPR010918",
+        "entry_name": "PurM-like, C-terminal domain"
+      }
+    ],
+    "1892": [
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 307,
+        "ipr_id": "IPR017972",
+        "entry_name": "Cytochrome P450, conserved site"
+      }
+    ],
+    "3319": [
+      {
+        "domain_idx": 8864,
+        "ipr_id": "IPR020103",
+        "entry_name": "Pseudouridine synthase, catalytic domain superfamily"
+      }
+    ],
+    "3447": [
+      {
+        "domain_idx": 8834,
+        "ipr_id": "IPR016181",
+        "entry_name": "Acyl-CoA N-acyltransferase"
+      },
+      {
+        "domain_idx": 4311,
+        "ipr_id": "IPR002347",
+        "entry_name": "Short-chain dehydrogenase/reductase SDR"
+      },
+      {
+        "domain_idx": 9949,
+        "ipr_id": "IPR043133",
+        "entry_name": "GTP cyclohydrolase I, C-terminal/NADPH-dependent 7-cyano-7-deazaguanine reductase"
+      },
+      {
+        "domain_idx": 714,
+        "ipr_id": "IPR000432",
+        "entry_name": "DNA mismatch repair protein MutS, C-terminal"
+      }
+    ],
+    "3906": [
+      {
+        "domain_idx": 8766,
+        "ipr_id": "IPR014756",
+        "entry_name": "Immunoglobulin E-set"
+      },
+      {
+        "domain_idx": 8588,
+        "ipr_id": "IPR009001",
+        "entry_name": "Translation elongation factor EF1A/initiation factor IF2gamma, C-terminal"
+      },
+      {
+        "domain_idx": 4973,
+        "ipr_id": "IPR005727",
+        "entry_name": "Large ribosomal subunit protein uL22, bacterial/chloroplast-type"
+      },
+      {
+        "domain_idx": 1210,
+        "ipr_id": "IPR003599",
+        "entry_name": "Immunoglobulin domain subtype"
+      }
+    ],
+    "4075": [
+      {
+        "domain_idx": 8724,
+        "ipr_id": "IPR013320",
+        "entry_name": "Concanavalin A-like lectin/glucanase domain superfamily"
+      },
+      {
+        "domain_idx": 10082,
+        "ipr_id": "IPR020472",
+        "entry_name": "PAC1/LIS1-like, WD-40 repeat"
+      },
+      {
+        "domain_idx": 3981,
+        "ipr_id": "IPR001063",
+        "entry_name": "Large ribosomal subunit protein uL22"
+      }
+    ]
+  }
+}
